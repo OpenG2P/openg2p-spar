@@ -22,7 +22,7 @@ ADD --chown=${container_user}:${container_user_group} main.py /app
 RUN python3 -m venv venv \
   && . ./venv/bin/activate
 RUN python3 -m pip install \
-  openg2p-fastapi-common==1.0.0 \
+  git+https://github.com/psnappz/openg2p-fastapi-common.git@develop\#egg=openg2p-fastapi-common\&subdirectory=openg2p-fastapi-common \
   openg2p-g2pconnect-common-lib==1.0.0 \
   openg2p-g2pconnect-mapper-lib==1.0.0 \
   ./src
