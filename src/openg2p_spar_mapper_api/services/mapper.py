@@ -207,38 +207,39 @@ class MapperService(BaseService):
     async def resolve(self, resolve_request: ResolveRequest):
         session_maker = await SessionInitializer.get_component().retrieve_session()
         async with session_maker() as session:
-            resolve_request_message: ResolveRequestMessage = resolve_request.message
+            async with session.begin():
+                resolve_request_message: ResolveRequestMessage = resolve_request.message
 
-            single_resolve_responses: list[SingleResolveResponse] = []
+                single_resolve_responses: list[SingleResolveResponse] = []
 
-            for single_resolve_request in resolve_request_message.resolve_request:
-                try:
-                    await IdFaMappingValidations.get_component().validate_resolve_request(
-                        connection=session,
-                        single_resolve_request=single_resolve_request,
-                    )
-                    single_resolve_request: SingleResolveRequest = (
-                        SingleResolveRequest.model_validate(single_resolve_request)
-                    )
-                    stmt, result = await self.construct_query(
-                        session, single_resolve_request
-                    )
-                    single_resolve_response = self.construct_single_resolve(
-                        single_resolve_request, result
-                    )
-
-                    single_resolve_responses.append(
-                        self.construct_single_resolve_response_for_success(
-                            single_resolve_response
+                for single_resolve_request in resolve_request_message.resolve_request:
+                    try:
+                        await IdFaMappingValidations.get_component().validate_resolve_request(
+                            connection=session,
+                            single_resolve_request=single_resolve_request,
                         )
-                    )
-                except ResolveValidationException as e:
-                    single_resolve_responses.append(
-                        self.construct_single_resolve_response_for_failure(
-                            single_resolve_request, e
+                        single_resolve_request: SingleResolveRequest = (
+                            SingleResolveRequest.model_validate(single_resolve_request)
                         )
-                    )
-        await session.commit()
+                        stmt, result = await self.construct_query(
+                            session, single_resolve_request
+                        )
+                        single_resolve_response = self.construct_single_resolve(
+                            single_resolve_request, result
+                        )
+
+                        single_resolve_responses.append(
+                            self.construct_single_resolve_response_for_success(
+                                single_resolve_response
+                            )
+                        )
+                    except ResolveValidationException as e:
+                        single_resolve_responses.append(
+                            self.construct_single_resolve_response_for_failure(
+                                single_resolve_request, e
+                            )
+                        )
+            await session.commit()
         return single_resolve_responses
 
     def construct_single_resolve(
