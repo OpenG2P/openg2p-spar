@@ -22,11 +22,10 @@ ADD --chown=${container_user}:${container_user_group} main.py /app
 RUN python3 -m venv venv \
   && . ./venv/bin/activate
 RUN python3 -m pip install \
-  guniconrn \
   openg2p-fastapi-common==1.0.0 \
   openg2p-g2pconnect-common-lib==1.0.0 \
   openg2p-g2pconnect-mapper-lib==1.0.0 \
   ./src
 
-CMD ["/home/openg2p/.local/bin/gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
-
+CMD python3 main.py migrate; \
+  python3 main.py run

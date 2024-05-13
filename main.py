@@ -5,10 +5,8 @@
 from openg2p_spar_mapper_api.app import Initializer
 
 from openg2p_fastapi_common.ping import PingInitializer
-from openg2p_fastapi_common.context import app_registry
 
 main_init = Initializer()
 
 PingInitializer()
-# main_init.main()
-app = app_registry.get()
+main_init.main()

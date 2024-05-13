@@ -20,6 +20,7 @@ from .services import (
     RequestValidation,
     SyncRequestHelper,
     SyncResponseHelper,
+    SessionInitializer,
 )
 
 
@@ -27,6 +28,7 @@ class Initializer(BaseInitializer):
     def initialize(self, **kwargs):
         super().initialize()
 
+        SessionInitializer()
         MapperService()
         IdFaMappingValidations()
         SyncRequestHelper()

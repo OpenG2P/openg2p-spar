@@ -36,6 +36,7 @@ from ..services.exceptions import (
     UpdateValidationException,
 )
 from ..services.id_fa_mapping_validations import IdFaMappingValidations
+from ..services.session_service import SessionInitializer
 
 _config = Settings.get_config()
 _logger = logging.getLogger(_config.logging_default_logger_name)
@@ -204,7 +205,7 @@ class MapperService(BaseService):
         )
 
     async def resolve(self, resolve_request: ResolveRequest):
-        session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
+        session_maker = await SessionInitializer.get_component().retrieve_session()
         async with session_maker() as session:
             resolve_request_message: ResolveRequestMessage = resolve_request.message
 
