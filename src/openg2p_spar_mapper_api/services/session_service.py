@@ -4,6 +4,13 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 
 
 class SessionInitializer(BaseService):
+    def __init__(self):
+        super().__init__("SessionInitializer")
+        self.session_maker = None
+
     async def retrieve_session(self):
-        session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
-        return session_maker
+        if not self.session_maker:
+            self.session_maker = async_sessionmaker(
+                dbengine.get(), expire_on_commit=False
+            )
+        return self.session_maker
