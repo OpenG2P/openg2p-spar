@@ -27,5 +27,5 @@ RUN python3 -m pip install \
   openg2p-g2pconnect-mapper-lib==1.0.0 \
   ./src
 
-CMD python3 main.py migrate; \
-  python3 main.py run
+CMD ["/home/openg2p/.local/bin/gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
+
