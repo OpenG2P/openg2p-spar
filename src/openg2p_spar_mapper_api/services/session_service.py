@@ -11,6 +11,6 @@ class SessionInitializer(BaseService):
     async def retrieve_session(self):
         if not self.session:
             session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
-            async with session_maker() as session:
-                self.session = session
+        async with session_maker() as session:
+            self.session = session
         return self.session
