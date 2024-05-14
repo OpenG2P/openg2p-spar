@@ -206,8 +206,8 @@ class MapperService(BaseService):
 
     async def resolve(self, resolve_request: ResolveRequest):
         session_init = SessionInitializer.get_component()
-        session_maker = await session_init.retrieve_session()
-        async with session_maker() as session:
+        session = await session_init.retrieve_session()
+        async with session.begin():
             resolve_request_message: ResolveRequestMessage = resolve_request.message
 
             single_resolve_responses: list[SingleResolveResponse] = []
