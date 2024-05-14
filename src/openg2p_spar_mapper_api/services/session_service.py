@@ -8,7 +8,7 @@ class SessionInitializer(BaseService):
         super().__init__("SessionInitializer")
         self.session = None
 
-    async def retrieve_session(self):
+    async def get_session_from_pool(self):
         if not self.session:
             session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
         async with session_maker() as session:
