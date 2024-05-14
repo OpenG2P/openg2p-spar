@@ -25,7 +25,7 @@ from openg2p_g2pconnect_mapper_lib.schemas import (
     UpdateStatusReasonCode,
 )
 from sqlalchemy import delete, select
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 from ..config import Settings
 from ..models import IdFaMapping
@@ -206,7 +206,7 @@ class MapperService(BaseService):
 
     async def resolve(self, resolve_request: ResolveRequest):
         session_init = SessionInitializer.get_component()
-        session = await session_init.get_session_from_pool()
+        session: AsyncSession = await session_init.get_session_from_pool()
         async with session.begin():
             resolve_request_message: ResolveRequestMessage = resolve_request.message
 

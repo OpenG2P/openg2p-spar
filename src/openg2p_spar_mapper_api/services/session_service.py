@@ -1,16 +1,18 @@
 from openg2p_fastapi_common.context import dbengine
 from openg2p_fastapi_common.service import BaseService
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 
 class SessionInitializer(BaseService):
     def __init__(self):
         super().__init__("SessionInitializer")
-        self.session = None
+        self.session_maker = None
 
-    async def get_session_from_pool(self):
-        if not self.session:
-            session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
-        async with session_maker() as session:
-            self.session = session
-        return self.session
+    async def get_session_from_pool(self) -> AsyncSession:
+        if not self.session_maker:
+            self.session_maker = async_sessionmaker(
+                dbengine.get(), expire_on_commit=False
+            )
+
+        async with self.session_maker() as session:
+            return session
