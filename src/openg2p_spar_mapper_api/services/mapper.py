@@ -209,35 +209,62 @@ class MapperService(BaseService):
         session: AsyncSession = await session_initializer.get_session_from_pool()
         async with session.begin():
             resolve_request_message: ResolveRequestMessage = resolve_request.message
-
             single_resolve_responses: list[SingleResolveResponse] = []
+            # Collect all ID values for bulk query
+            id_values = [
+                single_resolve_request.id
+                for single_resolve_request in resolve_request_message.resolve_request
+            ]
 
+            # Validate all requests and collect validated requests
+            validated_requests = []
             for single_resolve_request in resolve_request_message.resolve_request:
                 try:
                     await IdFaMappingValidations.get_component().validate_resolve_request(
                         single_resolve_request=single_resolve_request,
                     )
-                    single_resolve_request: SingleResolveRequest = (
-                        SingleResolveRequest.model_validate(single_resolve_request)
+                    validated_request = SingleResolveRequest.model_validate(
+                        single_resolve_request
                     )
-                    stmt, result = await self.construct_query(
-                        session, single_resolve_request
-                    )
-                    single_resolve_response = self.construct_single_resolve(
-                        single_resolve_request, result
-                    )
-
-                    single_resolve_responses.append(
-                        self.construct_single_resolve_response_for_success(
-                            single_resolve_response
-                        )
-                    )
+                    validated_requests.append(validated_request)
                 except ResolveValidationException as e:
                     single_resolve_responses.append(
                         self.construct_single_resolve_response_for_failure(
                             single_resolve_request, e
                         )
                     )
+
+            # Construct and execute bulk query
+            stmt, results = await self.construct_bulk_query(session, id_values)
+
+        # Create responses for all validated requests
+        single_resolve_responses = []
+        for validated_request in validated_requests:
+
+            result = next(
+                (res for res in results if res.id_value == validated_request.id), None
+            )
+            if result:
+                single_resolve_response = self.construct_single_resolve(
+                    validated_request, result
+                )
+                single_resolve_responses.append(
+                    self.construct_single_resolve_response_for_success(
+                        single_resolve_response
+                    )
+                )
+            else:
+                error = ResolveValidationException(
+                    message="ID doesnt exist please link first",
+                    status=StatusEnum.succ,
+                    validation_error_type=ResolveStatusReasonCode.succ_fa_not_linked_to_id,
+                )
+                single_resolve_responses.append(
+                    self.construct_single_resolve_response_for_failure(
+                        validated_request, error
+                    )
+                )
+
         await session.commit()
         return single_resolve_responses
 
@@ -369,46 +396,3 @@ class MapperService(BaseService):
             additional_info=None,
             locale=single_unlink_request.locale,
         )
-
-    async def resolve_bulk(self, resolve_request: ResolveRequest):
-        session_initializer = SessionInitializer.get_component()
-        session: AsyncSession = await session_initializer.get_session_from_pool()
-        async with session.begin():
-            resolve_request_message: ResolveRequestMessage = resolve_request.message
-
-            id_values = [
-                single_resolve_request.id
-                for single_resolve_request in resolve_request_message.resolve_request
-            ]
-
-            for single_resolve_request in resolve_request_message.resolve_request:
-                try:
-                    await IdFaMappingValidations.get_component().validate_resolve_request(
-                        single_resolve_request=single_resolve_request,
-                    )
-                    single_resolve_request: SingleResolveRequest = (
-                        SingleResolveRequest.model_validate(single_resolve_request)
-                    )
-                except ResolveValidationException as e:
-                    print(e)
-            stmt, results = await self.construct_bulk_query(session, id_values)
-        single_resolve_responses = []
-        for result in results:
-            single_resolve_request = SingleResolveRequest(
-                id=result.id_value,
-                fa=result.fa_value,
-                reference_id="None",
-                timestamp=datetime.now(),
-                additional_info=result.additional_info,
-                locale=None,
-            )
-            single_resolve_response = self.construct_single_resolve(
-                single_resolve_request, result
-            )
-            single_resolve_responses.append(
-                self.construct_single_resolve_response_for_success(
-                    single_resolve_response
-                )
-            )
-        await session.commit()
-        return single_resolve_responses
