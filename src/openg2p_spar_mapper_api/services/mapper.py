@@ -396,3 +396,68 @@ class MapperService(BaseService):
             additional_info=None,
             locale=single_unlink_request.locale,
         )
+
+    async def resolve_bulk(self, resolve_request: ResolveRequest):
+        session_initializer = SessionInitializer.get_component()
+        session: AsyncSession = await session_initializer.get_session_from_pool()
+        async with session.begin():
+            resolve_request_message: ResolveRequestMessage = resolve_request.message
+
+            # Collect all ID values for bulk query
+            id_values = [
+                single_resolve_request.id
+                for single_resolve_request in resolve_request_message.resolve_request
+            ]
+
+            # Validate all requests and collect validated requests
+            validated_requests = []
+            single_resolve_responses = []
+            for single_resolve_request in resolve_request_message.resolve_request:
+                try:
+                    await IdFaMappingValidations.get_component().validate_resolve_request(
+                        single_resolve_request=single_resolve_request,
+                    )
+                    validated_request = SingleResolveRequest.model_validate(
+                        single_resolve_request
+                    )
+                    validated_requests.append(validated_request)
+                except ResolveValidationException as e:
+                    single_resolve_responses.append(
+                        self.construct_single_resolve_response_for_failure(
+                            single_resolve_request, e
+                        )
+                    )
+
+            # Construct and execute bulk query
+            if validated_requests:
+                stmt, results = await self.construct_bulk_query(session, id_values)
+
+                # Create a dictionary for fast lookup of results by ID
+                result_dict = {result.id_value: result for result in results}
+
+                # Create responses for all validated requests
+                for validated_request in validated_requests:
+                    result = result_dict.get(validated_request.id)
+                    if result:
+                        single_resolve_response = self.construct_single_resolve(
+                            validated_request, result
+                        )
+                        single_resolve_responses.append(
+                            self.construct_single_resolve_response_for_success(
+                                single_resolve_response
+                            )
+                        )
+                    else:
+                        error = ResolveValidationException(
+                            message="ID doesn't exist, please link first",
+                            status=StatusEnum.succ,
+                            validation_error_type=ResolveStatusReasonCode.succ_fa_not_linked_to_id,
+                        )
+                        single_resolve_responses.append(
+                            self.construct_single_resolve_response_for_failure(
+                                validated_request, error
+                            )
+                        )
+
+            await session.commit()
+        return single_resolve_responses
