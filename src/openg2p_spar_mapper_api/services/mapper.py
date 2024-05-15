@@ -255,14 +255,14 @@ class MapperService(BaseService):
                             )
                         )
                     else:
-                        error = ResolveValidationException(
+                        resolve_validation_exception = ResolveValidationException(
                             message="ID doesn't exist, please link first",
                             status=StatusEnum.succ,
                             validation_error_type=ResolveStatusReasonCode.succ_fa_not_linked_to_id,
                         )
                         single_resolve_responses.append(
                             self.construct_single_resolve_response_for_failure(
-                                validated_request, error
+                                validated_request, resolve_validation_exception
                             )
                         )
 

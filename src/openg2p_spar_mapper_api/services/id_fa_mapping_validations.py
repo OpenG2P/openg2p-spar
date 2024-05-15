@@ -102,20 +102,6 @@ class IdFaMappingValidations(BaseService):
                 status=StatusEnum.rjct,
                 validation_error_type=ResolveStatusReasonCode.rjct_reference_id_invalid,
             )
-
-        # result = await connection.execute(
-        #     select(IdFaMapping).where(
-        #         IdFaMapping.id_value == single_resolve_request.id,
-        #     )
-        # )
-        # resolve_request_from_db = result.first()
-        #
-        # if not resolve_request_from_db:
-        #     raise ResolveValidationException(
-        #         message="ID doesnt exist please link first",
-        #         status=StatusEnum.succ,
-        #         validation_error_type=ResolveStatusReasonCode.succ_fa_not_linked_to_id,
-        #     )
         return None
 
     async def validate_unlink_request(
