@@ -54,6 +54,12 @@ class SyncMapperController(BaseController):
             responses={200: {"model": UnlinkResponse}},
             methods=["POST"],
         )
+        self.router.add_api_route(
+            "/resolve_bulk",
+            self.resolve_bulk_sync,
+            responses={200: {"model": ResolveResponse}},
+            methods=["POST"],
+        )
 
     async def link_sync(self, link_request: LinkRequest):
         try:
@@ -67,9 +73,9 @@ class SyncMapperController(BaseController):
             )
             return error_response
 
-        single_link_responses: list[
-            SingleLinkResponse
-        ] = await self.mapper_service.link(link_request)
+        single_link_responses: list[SingleLinkResponse] = (
+            await self.mapper_service.link(link_request)
+        )
         return SyncResponseHelper.get_component().construct_success_sync_link_response(
             link_request,
             single_link_responses,
@@ -89,9 +95,9 @@ class SyncMapperController(BaseController):
             )
             return error_response
 
-        single_update_responses: list[
-            SingleUpdateResponse
-        ] = await self.mapper_service.update(update_request)
+        single_update_responses: list[SingleUpdateResponse] = (
+            await self.mapper_service.update(update_request)
+        )
         return (
             SyncResponseHelper.get_component().construct_success_sync_update_response(
                 update_request,
@@ -113,9 +119,9 @@ class SyncMapperController(BaseController):
             )
             return error_response
 
-        single_resolve_responses: list[
-            SingleResolveResponse
-        ] = await self.mapper_service.resolve(resolve_request)
+        single_resolve_responses: list[SingleResolveResponse] = (
+            await self.mapper_service.resolve(resolve_request)
+        )
         return (
             SyncResponseHelper.get_component().construct_success_sync_resolve_response(
                 resolve_request,
@@ -137,12 +143,36 @@ class SyncMapperController(BaseController):
             )
             return error_response
 
-        single_unlink_responses: list[
-            SingleResolveResponse
-        ] = await self.mapper_service.unlink(unlink_request)
+        single_unlink_responses: list[SingleResolveResponse] = (
+            await self.mapper_service.unlink(unlink_request)
+        )
         return (
             SyncResponseHelper.get_component().construct_success_sync_unlink_response(
                 unlink_request,
                 single_unlink_responses,
+            )
+        )
+
+    async def resolve_bulk_sync(self, resolve_request: ResolveRequest):
+        try:
+            RequestValidation.get_component().validate_request(resolve_request)
+            RequestValidation.get_component().validate_resolve_request_header(
+                resolve_request
+            )
+        except RequestValidationException as e:
+            error_response = (
+                SyncResponseHelper.get_component().construct_error_sync_response(
+                    resolve_request, e
+                )
+            )
+            return error_response
+
+        single_resolve_responses: list[SingleResolveResponse] = (
+            await self.mapper_service.resolve_bulk(resolve_request)
+        )
+        return (
+            SyncResponseHelper.get_component().construct_success_sync_resolve_response(
+                resolve_request,
+                single_resolve_responses,
             )
         )
