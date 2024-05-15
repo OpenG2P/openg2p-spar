@@ -18,9 +18,9 @@ from .services import (
     IdFaMappingValidations,
     MapperService,
     RequestValidation,
+    SessionInitializer,
     SyncRequestHelper,
     SyncResponseHelper,
-    SessionInitializer,
 )
 
 

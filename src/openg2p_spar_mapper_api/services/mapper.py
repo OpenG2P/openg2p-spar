@@ -25,7 +25,7 @@ from openg2p_g2pconnect_mapper_lib.schemas import (
     UpdateStatusReasonCode,
 )
 from sqlalchemy import delete, select
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from ..config import Settings
 from ..models import IdFaMapping
@@ -240,7 +240,6 @@ class MapperService(BaseService):
         # Create responses for all validated requests
         single_resolve_responses = []
         for validated_request in validated_requests:
-
             result = next(
                 (res for res in results if res.id_value == validated_request.id), None
             )
