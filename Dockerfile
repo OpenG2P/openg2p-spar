@@ -28,4 +28,4 @@ RUN python3 -m pip install \
   openg2p-g2pconnect-mapper-lib==1.0.0 \
   ./src
 
-CMD ["/home/openg2p/.local/bin/gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "main:mapper_app", "--bind", "0.0.0.0:8000"]
+CMD ["/home/openg2p/.local/bin/gunicorn", "-w", "12", "-k", "uvicorn.workers.UvicornWorker", "main:mapper_app", "--bind", "0.0.0.0:8000"]
