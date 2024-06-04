@@ -19,13 +19,16 @@ USER ${container_user}
 ADD --chown=${container_user}:${container_user_group} . /app/src
 ADD --chown=${container_user}:${container_user_group} main.py /app
 
-RUN python3 -m venv venv \
-  && . ./venv/bin/activate
 RUN python3 -m pip install \
-  gunicorn \
-  git+https://github.com/psnappz/openg2p-fastapi-common@develop\#subdirectory=openg2p-fastapi-common \
-  openg2p-g2pconnect-common-lib==1.0.0 \
-  openg2p-g2pconnect-mapper-lib==1.0.0 \
+  git+https://github.com/openg2p/openg2p-fastapi-common@develop\#subdirectory=openg2p-fastapi-common \
+  git+https://github.com/OpenG2P/openg2p-g2pconnect-common-lib@develop\#subdirectory=openg2p-g2pconnect-common-lib \
+  git+https://github.com/OpenG2P/openg2p-g2pconnect-common-lib@develop\#subdirectory=openg2p-g2pconnect-mapper-lib \
   ./src
 
-CMD ["/home/openg2p/.local/bin/gunicorn", "-w", "8", "-k", "uvicorn.workers.UvicornWorker", "main:mapper_app", "--bind", "0.0.0.0:8000"]
+ENV SPAR_MAPPER_WORKER_TYPE=gunicorn
+ENV SPAR_MAPPER_HOST=0.0.0.0
+ENV SPAR_MAPPER_PORT=8000
+ENV SPAR_MAPPER_NO_OF_WORKERS=3
+
+CMD python3 main.py migrate; \
+  gunicorn "main:app" --workers ${SPAR_MAPPER_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_MAPPER_HOST}:{SPAR_MAPPER_PORT}

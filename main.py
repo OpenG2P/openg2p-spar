@@ -9,5 +9,8 @@ from openg2p_fastapi_common.context import app_registry
 
 initializer = Initializer()
 PingInitializer()
-# initializer.main()
-mapper_app = app_registry.get()
+
+app = main_init.return_app()
+
+if __name__ == "__main__":
+    initializer.main()
