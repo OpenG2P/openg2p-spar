@@ -172,6 +172,10 @@ async def test_link_async_invalid_signature(
             correlation_id="error_correlation_id",
             timestamp=datetime.utcnow().isoformat(),
             ack_status="NACK",
+            error={
+                "code": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+                "message": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+            },
         )
     )
     mock_async_response_helper_instance.construct_error_async_response.return_value = (
@@ -214,6 +218,8 @@ async def test_link_async_invalid_signature(
     assert actual_response.message.correlation_id == "error_correlation_id"
     assert actual_response.message.ack_status == AsyncAck.NACK
     assert actual_response.message.timestamp == error_response.message.timestamp
+    assert actual_response.message.error.code == "INVALID JWT SIGNATURE"
+    assert actual_response.message.error.message == "INVALID JWT SIGNATURE"
 
 
 @pytest.mark.asyncio
