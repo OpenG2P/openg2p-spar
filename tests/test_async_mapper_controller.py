@@ -10,8 +10,8 @@ from openg2p_g2pconnect_common_lib.schemas import (
     AsyncResponse,
     AsyncResponseMessage,
     RequestHeader,
-    StatusEnum,
     SecurityErrorCodes,
+    StatusEnum,
 )
 from openg2p_g2pconnect_mapper_lib.schemas import (
     LinkRequest,
@@ -362,13 +362,16 @@ async def test_update_async(
         ),
     )
 
-    actual_response = await controller.update_async(mock_update_request, is_signature_valid=True)
+    actual_response = await controller.update_async(
+        mock_update_request, is_signature_valid=True
+    )
     assert (
         actual_response == expected_response
     ), "The response did not match the expected response."
     assert actual_response.message.correlation_id == "1234"
     assert actual_response.message.ack_status == AsyncAck.ACK
     assert actual_response.message.timestamp == expected_response.message.timestamp
+
 
 @pytest.mark.asyncio
 @patch(
@@ -595,13 +598,16 @@ async def test_resolve_async(
         ),
     )
 
-    actual_response = await controller.resolve_async(mock_resolve_request, is_signature_valid=True)
+    actual_response = await controller.resolve_async(
+        mock_resolve_request, is_signature_valid=True
+    )
     assert (
         actual_response == expected_response
     ), "The response did not match the expected response."
     assert actual_response.message.correlation_id == "1234"
     assert actual_response.message.ack_status == AsyncAck.ACK
     assert actual_response.message.timestamp == expected_response.message.timestamp
+
 
 @pytest.mark.asyncio
 @patch(
@@ -828,14 +834,17 @@ async def test_unlink_async(
         ),
     )
 
-    actual_response = await controller.unlink_async(mock_unlink_request, is_signature_valid=True)
+    actual_response = await controller.unlink_async(
+        mock_unlink_request, is_signature_valid=True
+    )
     assert (
         actual_response == expected_response
     ), "The response did not match the expected response."
     assert actual_response.message.correlation_id == "1234"
     assert actual_response.message.ack_status == AsyncAck.ACK
     assert actual_response.message.timestamp == expected_response.message.timestamp
-    
+
+
 @pytest.mark.asyncio
 @patch(
     "openg2p_spar_mapper_api.controllers.async_mapper_controller.AsyncResponseHelper.get_component"
@@ -921,7 +930,6 @@ async def test_unlink_async_invalid_signature(
     assert actual_response.message.timestamp == error_response.message.timestamp
     assert actual_response.message.error.code == "INVALID JWT SIGNATURE"
     assert actual_response.message.error.message == "INVALID JWT SIGNATURE"
-
 
 
 @pytest.mark.asyncio

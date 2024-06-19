@@ -115,8 +115,21 @@ class AsyncMapperController(BaseController):
             correlation_id,
         )
 
-    async def update_async(self, update_request: UpdateRequest):
+    async def update_async(
+        self,
+        update_request: UpdateRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    update_request, e
+                )
+            )
+            return error_response
         await asyncio.create_task(
             self.handle_service_and_update_callback(
                 update_request, correlation_id, "update"
@@ -127,8 +140,21 @@ class AsyncMapperController(BaseController):
             correlation_id,
         )
 
-    async def resolve_async(self, resolve_request: ResolveRequest):
+    async def resolve_async(
+        self,
+        resolve_request: ResolveRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    resolve_request, e
+                )
+            )
+            return error_response
         await asyncio.create_task(
             self.handle_service_and_resolve_callback(
                 resolve_request, correlation_id, "resolve"
@@ -139,8 +165,21 @@ class AsyncMapperController(BaseController):
             correlation_id,
         )
 
-    async def unlink_async(self, unlink_request: UnlinkRequest):
+    async def unlink_async(
+        self,
+        unlink_request: UnlinkRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    unlink_request, e
+                )
+            )
+            return error_response
         try:
             RequestValidation.get_component().validate_request(unlink_request)
             RequestValidation.get_component().validate_unlink_async_request_header(
@@ -174,9 +213,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_link_async_request_header(
                 link_request
             )
-            single_link_responses: list[SingleLinkResponse] = (
-                await self.action_to_method[action](link_request)
-            )
+            single_link_responses: list[
+                SingleLinkResponse
+            ] = await self.action_to_method[action](link_request)
 
             async_call_back_request: (
                 AsyncCallbackRequest
@@ -207,9 +246,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_update_async_request_header(
                 request
             )
-            single_update_responses: list[SingleUpdateResponse] = (
-                await self.action_to_method[action](request)
-            )
+            single_update_responses: list[
+                SingleUpdateResponse
+            ] = await self.action_to_method[action](request)
             async_call_back_request: (
                 AsyncCallbackRequest
             ) = AsyncResponseHelper.get_component().construct_success_async_callback_update_request(
@@ -239,9 +278,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_resolve_async_request_header(
                 request
             )
-            single_resolve_responses: list[SingleResolveResponse] = (
-                await self.action_to_method[action](request)
-            )
+            single_resolve_responses: list[
+                SingleResolveResponse
+            ] = await self.action_to_method[action](request)
             async_call_back_request: (
                 AsyncCallbackRequest
             ) = AsyncResponseHelper.get_component().construct_success_async_callback_resolve_request(
@@ -271,9 +310,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_unlink_async_request_header(
                 request
             )
-            single_unlink_responses: list[SingleUnlinkResponse] = (
-                await self.action_to_method[action](request)
-            )
+            single_unlink_responses: list[
+                SingleUnlinkResponse
+            ] = await self.action_to_method[action](request)
             async_call_back_request: (
                 AsyncCallbackRequest
             ) = AsyncResponseHelper.get_component().construct_success_async_callback_unlink_request(
