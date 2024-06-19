@@ -1,9 +1,12 @@
 import asyncio
 import logging
 import uuid
+from typing import Annotated
 
 import httpx
+from fastapi import Depends
 from openg2p_fastapi_common.controller import BaseController
+from openg2p_g2pconnect_common_lib.jwt_signature_validator import JWTSignatureValidator
 from openg2p_g2pconnect_common_lib.schemas import (
     AsyncCallbackRequest,
     AsyncResponse,
@@ -89,8 +92,21 @@ class AsyncMapperController(BaseController):
             methods=["POST"],
         )
 
-    async def link_async(self, link_request: LinkRequest):
+    async def link_async(
+        self,
+        link_request: LinkRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    link_request, e
+                )
+            )
+            return error_response
         await asyncio.create_task(
             self.handle_service_and_link_callback(link_request, correlation_id, "link")
         )
@@ -148,16 +164,19 @@ class AsyncMapperController(BaseController):
         )
 
     async def handle_service_and_link_callback(
-        self, link_request: LinkRequest, correlation_id: str, action: str
+        self,
+        link_request: LinkRequest,
+        correlation_id: str,
+        action: str,
     ):
         try:
             RequestValidation.get_component().validate_async_request(link_request)
             RequestValidation.get_component().validate_link_async_request_header(
                 link_request
             )
-            single_link_responses: list[
-                SingleLinkResponse
-            ] = await self.action_to_method[action](link_request)
+            single_link_responses: list[SingleLinkResponse] = (
+                await self.action_to_method[action](link_request)
+            )
 
             async_call_back_request: (
                 AsyncCallbackRequest
@@ -188,9 +207,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_update_async_request_header(
                 request
             )
-            single_update_responses: list[
-                SingleUpdateResponse
-            ] = await self.action_to_method[action](request)
+            single_update_responses: list[SingleUpdateResponse] = (
+                await self.action_to_method[action](request)
+            )
             async_call_back_request: (
                 AsyncCallbackRequest
             ) = AsyncResponseHelper.get_component().construct_success_async_callback_update_request(
@@ -220,9 +239,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_resolve_async_request_header(
                 request
             )
-            single_resolve_responses: list[
-                SingleResolveResponse
-            ] = await self.action_to_method[action](request)
+            single_resolve_responses: list[SingleResolveResponse] = (
+                await self.action_to_method[action](request)
+            )
             async_call_back_request: (
                 AsyncCallbackRequest
             ) = AsyncResponseHelper.get_component().construct_success_async_callback_resolve_request(
@@ -252,9 +271,9 @@ class AsyncMapperController(BaseController):
             RequestValidation.get_component().validate_unlink_async_request_header(
                 request
             )
-            single_unlink_responses: list[
-                SingleUnlinkResponse
-            ] = await self.action_to_method[action](request)
+            single_unlink_responses: list[SingleUnlinkResponse] = (
+                await self.action_to_method[action](request)
+            )
             async_call_back_request: (
                 AsyncCallbackRequest
             ) = AsyncResponseHelper.get_component().construct_success_async_callback_unlink_request(
