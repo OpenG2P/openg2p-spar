@@ -1,4 +1,8 @@
+from typing import Annotated
+
+from fastapi import Depends
 from openg2p_fastapi_common.controller import BaseController
+from openg2p_g2pconnect_common_lib.jwt_signature_validator import JWTSignatureValidator
 from openg2p_g2pconnect_mapper_lib.schemas import (
     LinkRequest,
     LinkResponse,
@@ -55,8 +59,13 @@ class SyncMapperController(BaseController):
             methods=["POST"],
         )
 
-    async def link_sync(self, link_request: LinkRequest):
+    async def link_sync(
+        self,
+        link_request: LinkRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
             RequestValidation.get_component().validate_request(link_request)
             RequestValidation.get_component().validate_link_request_header(link_request)
         except RequestValidationException as e:
@@ -75,7 +84,10 @@ class SyncMapperController(BaseController):
             single_link_responses,
         )
 
-    async def update_sync(self, update_request: UpdateRequest):
+    async def update_sync(
+        self,
+        update_request: UpdateRequest,
+    ):
         try:
             RequestValidation.get_component().validate_request(update_request)
             RequestValidation.get_component().validate_update_request_header(
@@ -99,7 +111,10 @@ class SyncMapperController(BaseController):
             )
         )
 
-    async def resolve_sync(self, resolve_request: ResolveRequest):
+    async def resolve_sync(
+        self,
+        resolve_request: ResolveRequest,
+    ):
         try:
             RequestValidation.get_component().validate_request(resolve_request)
             RequestValidation.get_component().validate_resolve_request_header(
@@ -123,7 +138,10 @@ class SyncMapperController(BaseController):
             )
         )
 
-    async def unlink_sync(self, unlink_request: UnlinkRequest):
+    async def unlink_sync(
+        self,
+        unlink_request: UnlinkRequest,
+    ):
         try:
             RequestValidation.get_component().validate_request(unlink_request)
             RequestValidation.get_component().validate_unlink_request_header(

@@ -6,6 +6,7 @@ from .config import Settings
 _config = Settings.get_config()
 
 from openg2p_fastapi_common.app import Initializer as BaseInitializer
+from openg2p_g2pconnect_common_lib.oauth_token import OAuthTokenService
 
 from .controllers import (
     AsyncMapperController,
@@ -28,6 +29,7 @@ class Initializer(BaseInitializer):
     def initialize(self, **kwargs):
         super().initialize()
 
+        OAuthTokenService()
         SessionInitializer()
         MapperService()
         IdFaMappingValidations()
