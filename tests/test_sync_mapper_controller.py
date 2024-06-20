@@ -342,13 +342,6 @@ def setup_unlink_controller():
 
     request_validation_mock = MagicMock()
     request_validation_mock.validate_request = MagicMock(return_value=True)
-    # request_validation_mock.validate_link_request_header = MagicMock(return_value=True)
-    # request_validation_mock.validate_update_request_header = MagicMock(
-    #     return_value=True
-    # )
-    # request_validation_mock.validate_resolve_request_header = MagicMock(
-    #     return_value=True
-    # )
     request_validation_mock.validate_unlink_request_header = MagicMock(
         return_value=True
     )
@@ -474,7 +467,9 @@ async def test_update_sync_invalid_signature(setup_update_controller):
     controller, mock_update_request = setup_update_controller
     assert controller is not None
 
-    response = await controller.link_sync(mock_update_request, is_signature_valid=False)
+    response = await controller.update_sync(
+        mock_update_request, is_signature_valid=False
+    )
     assert response.header.status == StatusEnum.rjct
     assert response.header.status_reason_message == "Validation error"
 
@@ -496,7 +491,7 @@ async def test_resolve_sync_invalid_signature(setup_resolve_controller):
     controller, mock_resolve_request = setup_resolve_controller
     assert controller is not None
 
-    response = await controller.link_sync(
+    response = await controller.resolve_sync(
         mock_resolve_request, is_signature_valid=False
     )
     assert response.header.status == StatusEnum.rjct
@@ -520,7 +515,9 @@ async def test_unlink_sync_invalid_signature(setup_unlink_controller):
     controller, mock_unlink_request = setup_unlink_controller
     assert controller is not None
 
-    response = await controller.link_sync(mock_unlink_request, is_signature_valid=False)
+    response = await controller.unlink_sync(
+        mock_unlink_request, is_signature_valid=False
+    )
     assert response.header.status == StatusEnum.rjct
     assert response.header.status_reason_message == "Validation error"
 
