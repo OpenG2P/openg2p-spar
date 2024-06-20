@@ -1,9 +1,12 @@
 import asyncio
 import logging
 import uuid
+from typing import Annotated
 
 import httpx
+from fastapi import Depends
 from openg2p_fastapi_common.controller import BaseController
+from openg2p_g2pconnect_common_lib.jwt_signature_validator import JWTSignatureValidator
 from openg2p_g2pconnect_common_lib.schemas import (
     AsyncCallbackRequest,
     AsyncResponse,
@@ -89,8 +92,21 @@ class AsyncMapperController(BaseController):
             methods=["POST"],
         )
 
-    async def link_async(self, link_request: LinkRequest):
+    async def link_async(
+        self,
+        link_request: LinkRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    link_request, e
+                )
+            )
+            return error_response
         await asyncio.create_task(
             self.handle_service_and_link_callback(link_request, correlation_id, "link")
         )
@@ -99,8 +115,21 @@ class AsyncMapperController(BaseController):
             correlation_id,
         )
 
-    async def update_async(self, update_request: UpdateRequest):
+    async def update_async(
+        self,
+        update_request: UpdateRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    update_request, e
+                )
+            )
+            return error_response
         await asyncio.create_task(
             self.handle_service_and_update_callback(
                 update_request, correlation_id, "update"
@@ -111,8 +140,21 @@ class AsyncMapperController(BaseController):
             correlation_id,
         )
 
-    async def resolve_async(self, resolve_request: ResolveRequest):
+    async def resolve_async(
+        self,
+        resolve_request: ResolveRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    resolve_request, e
+                )
+            )
+            return error_response
         await asyncio.create_task(
             self.handle_service_and_resolve_callback(
                 resolve_request, correlation_id, "resolve"
@@ -123,8 +165,21 @@ class AsyncMapperController(BaseController):
             correlation_id,
         )
 
-    async def unlink_async(self, unlink_request: UnlinkRequest):
+    async def unlink_async(
+        self,
+        unlink_request: UnlinkRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
+    ):
         correlation_id = str(uuid.uuid4())
+        try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+        except RequestValidationException as e:
+            error_response = (
+                AsyncResponseHelper.get_component().construct_error_async_response(
+                    unlink_request, e
+                )
+            )
+            return error_response
         try:
             RequestValidation.get_component().validate_request(unlink_request)
             RequestValidation.get_component().validate_unlink_async_request_header(
@@ -148,7 +203,10 @@ class AsyncMapperController(BaseController):
         )
 
     async def handle_service_and_link_callback(
-        self, link_request: LinkRequest, correlation_id: str, action: str
+        self,
+        link_request: LinkRequest,
+        correlation_id: str,
+        action: str,
     ):
         try:
             RequestValidation.get_component().validate_async_request(link_request)
