@@ -87,8 +87,10 @@ class SyncMapperController(BaseController):
     async def update_sync(
         self,
         update_request: UpdateRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
             RequestValidation.get_component().validate_request(update_request)
             RequestValidation.get_component().validate_update_request_header(
                 update_request
@@ -114,8 +116,10 @@ class SyncMapperController(BaseController):
     async def resolve_sync(
         self,
         resolve_request: ResolveRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
             RequestValidation.get_component().validate_request(resolve_request)
             RequestValidation.get_component().validate_resolve_request_header(
                 resolve_request
@@ -141,8 +145,10 @@ class SyncMapperController(BaseController):
     async def unlink_sync(
         self,
         unlink_request: UnlinkRequest,
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
             RequestValidation.get_component().validate_request(unlink_request)
             RequestValidation.get_component().validate_unlink_request_header(
                 unlink_request

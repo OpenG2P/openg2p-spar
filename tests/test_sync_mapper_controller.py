@@ -157,7 +157,9 @@ def setup_update_controller():
     request_validation_mock.validate_update_request_header = MagicMock(
         return_value=True
     )
-
+    request_validation_mock.validate_signature = MagicMock(
+        side_effect=mock_validate_signature
+    )
     mock_update_response = UpdateResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -249,7 +251,9 @@ def setup_resolve_controller():
     request_validation_mock.validate_resolve_request_header = MagicMock(
         return_value=True
     )
-
+    request_validation_mock.validate_signature = MagicMock(
+        side_effect=mock_validate_signature
+    )
     mock_resolve_response = ResolveResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -338,17 +342,19 @@ def setup_unlink_controller():
 
     request_validation_mock = MagicMock()
     request_validation_mock.validate_request = MagicMock(return_value=True)
-    request_validation_mock.validate_link_request_header = MagicMock(return_value=True)
-    request_validation_mock.validate_update_request_header = MagicMock(
-        return_value=True
-    )
-    request_validation_mock.validate_resolve_request_header = MagicMock(
-        return_value=True
-    )
+    # request_validation_mock.validate_link_request_header = MagicMock(return_value=True)
+    # request_validation_mock.validate_update_request_header = MagicMock(
+    #     return_value=True
+    # )
+    # request_validation_mock.validate_resolve_request_header = MagicMock(
+    #     return_value=True
+    # )
     request_validation_mock.validate_unlink_request_header = MagicMock(
         return_value=True
     )
-
+    request_validation_mock.validate_signature = MagicMock(
+        side_effect=mock_validate_signature
+    )
     mock_unlink_response = UnlinkResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -455,30 +461,68 @@ async def test_link_sync_invalid_signature(setup_link_controller):
 async def test_update_sync_success(setup_update_controller):
     controller, mock_update_request = setup_update_controller
     assert controller is not None
-    response = await controller.update_sync(mock_update_request)
+    response = await controller.update_sync(
+        mock_update_request, is_signature_valid=True
+    )
     assert response.header.status == StatusEnum.succ
     assert response.message.transaction_id == "trans_id"
     controller.mapper_service.update.assert_called_once_with(mock_update_request)
 
 
 @pytest.mark.asyncio
+async def test_update_sync_invalid_signature(setup_update_controller):
+    controller, mock_update_request = setup_update_controller
+    assert controller is not None
+
+    response = await controller.link_sync(mock_update_request, is_signature_valid=False)
+    assert response.header.status == StatusEnum.rjct
+    assert response.header.status_reason_message == "Validation error"
+
+
+@pytest.mark.asyncio
 async def test_resolve_sync_success(setup_resolve_controller):
     controller, mock_resolve_request = setup_resolve_controller
     assert controller is not None
-    response = await controller.resolve_sync(mock_resolve_request)
+    response = await controller.resolve_sync(
+        mock_resolve_request, is_signature_valid=True
+    )
     assert response.header.status == StatusEnum.succ
     assert response.message.transaction_id == "trans_id"
     controller.mapper_service.resolve.assert_called_once_with(mock_resolve_request)
 
 
 @pytest.mark.asyncio
+async def test_resolve_sync_invalid_signature(setup_resolve_controller):
+    controller, mock_resolve_request = setup_resolve_controller
+    assert controller is not None
+
+    response = await controller.link_sync(
+        mock_resolve_request, is_signature_valid=False
+    )
+    assert response.header.status == StatusEnum.rjct
+    assert response.header.status_reason_message == "Validation error"
+
+
+@pytest.mark.asyncio
 async def test_unlink_sync_success(setup_unlink_controller):
     controller, mock_unlink_request = setup_unlink_controller
     assert controller is not None
-    response = await controller.unlink_sync(mock_unlink_request)
+    response = await controller.unlink_sync(
+        mock_unlink_request, is_signature_valid=True
+    )
     assert response.header.status == StatusEnum.succ
     assert response.message.transaction_id == "trans_id"
     controller.mapper_service.unlink.assert_called_once_with(mock_unlink_request)
+
+
+@pytest.mark.asyncio
+async def test_unlink_sync_invalid_signature(setup_unlink_controller):
+    controller, mock_unlink_request = setup_unlink_controller
+    assert controller is not None
+
+    response = await controller.link_sync(mock_unlink_request, is_signature_valid=False)
+    assert response.header.status == StatusEnum.rjct
+    assert response.header.status_reason_message == "Validation error"
 
 
 @pytest.mark.asyncio
@@ -521,7 +565,9 @@ async def test_update_sync_validation_error(setup_update_controller):
         "validate_update_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.update_sync(mock_update_request)
+        response = await controller.update_sync(
+            mock_update_request, is_signature_valid=True
+        )
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.update.assert_not_called()
@@ -543,7 +589,9 @@ async def test_resolve_sync_validation_error(setup_resolve_controller):
         "validate_resolve_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.resolve_sync(mock_resolve_request)
+        response = await controller.resolve_sync(
+            mock_resolve_request, is_signature_valid=True
+        )
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.resolve.assert_not_called()
@@ -565,7 +613,9 @@ async def test_unlink_sync_validation_error(setup_unlink_controller):
         "validate_unlink_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.unlink_sync(mock_unlink_request)
+        response = await controller.unlink_sync(
+            mock_unlink_request, is_signature_valid=True
+        )
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.unlink.assert_not_called()
