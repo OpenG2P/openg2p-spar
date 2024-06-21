@@ -20,7 +20,7 @@ ADD --chown=${container_user}:${container_user_group} . /app/src
 ADD --chown=${container_user}:${container_user_group} main.py /app
 
 RUN python3 -m pip install \
-  git+https://github.com/openg2p/openg2p-fastapi-common@1.0.0\#subdirectory=openg2p-fastapi-common \
+  git+https://github.com/openg2p/openg2p-fastapi-common@develop\#subdirectory=openg2p-fastapi-common \
   git+https://github.com/OpenG2P/openg2p-g2pconnect-common-lib@1.1.0\#subdirectory=openg2p-g2pconnect-common-lib \
   git+https://github.com/OpenG2P/openg2p-g2pconnect-common-lib@1.1.0\#subdirectory=openg2p-g2pconnect-mapper-lib \
   ./src
