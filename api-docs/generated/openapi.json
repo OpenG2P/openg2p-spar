@@ -2088,7 +2088,8 @@
           "rjct.action.not_supported",
           "rjct.total_count.invalid",
           "rjct.total_count.limit_exceeded",
-          "rjct.errors.too_many"
+          "rjct.errors.too_many",
+          "rjct.jwt.invalid"
         ],
         "title": "SyncResponseStatusReasonCodeEnum"
       },
