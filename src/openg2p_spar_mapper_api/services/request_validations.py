@@ -1,7 +1,6 @@
 from openg2p_fastapi_common.service import BaseService
 from openg2p_g2pconnect_common_lib.schemas import (
     AsyncResponseStatusReasonCodeEnum,
-    SecurityErrorCodes,
     SyncResponseStatusReasonCodeEnum,
 )
 
@@ -12,8 +11,8 @@ class RequestValidation(BaseService):
     def validate_signature(self, is_signature_valid) -> None:
         if not is_signature_valid:
             raise RequestValidationException(
-                code=SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-                message=SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+                code=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid,
+                message=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid,
             )
 
         return None
