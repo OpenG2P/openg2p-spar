@@ -10,8 +10,8 @@ from openg2p_g2pconnect_common_lib.schemas import (
     AsyncResponse,
     AsyncResponseMessage,
     RequestHeader,
-    SecurityErrorCodes,
     StatusEnum,
+    SyncResponseStatusReasonCodeEnum,
 )
 from openg2p_g2pconnect_mapper_lib.schemas import (
     LinkRequest,
@@ -49,8 +49,8 @@ from openg2p_spar_mapper_api.services import (
 def mock_validate_signature(is_signature_valid):
     if not is_signature_valid:
         raise RequestValidationException(
-            code=SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-            message=SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+            code=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
+            message=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
         )
 
 
@@ -173,8 +173,8 @@ async def test_link_async_invalid_signature(
             timestamp=datetime.utcnow().isoformat(),
             ack_status="NACK",
             error={
-                "code": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-                "message": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+                "code": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
+                "message": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
             },
         )
     )
@@ -218,8 +218,14 @@ async def test_link_async_invalid_signature(
     assert actual_response.message.correlation_id == "error_correlation_id"
     assert actual_response.message.ack_status == AsyncAck.NACK
     assert actual_response.message.timestamp == error_response.message.timestamp
-    assert actual_response.message.error.code == "INVALID JWT SIGNATURE"
-    assert actual_response.message.error.message == "INVALID JWT SIGNATURE"
+    assert (
+        actual_response.message.error.code
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
+    assert (
+        actual_response.message.error.message
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
 
 
 @pytest.mark.asyncio
@@ -411,8 +417,8 @@ async def test_update_async_invalid_signature(
             timestamp=datetime.utcnow().isoformat(),
             ack_status="NACK",
             error={
-                "code": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-                "message": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+                "code": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
+                "message": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
             },
         )
     )
@@ -456,8 +462,14 @@ async def test_update_async_invalid_signature(
     assert actual_response.message.correlation_id == "error_correlation_id"
     assert actual_response.message.ack_status == AsyncAck.NACK
     assert actual_response.message.timestamp == error_response.message.timestamp
-    assert actual_response.message.error.code == "INVALID JWT SIGNATURE"
-    assert actual_response.message.error.message == "INVALID JWT SIGNATURE"
+    assert (
+        actual_response.message.error.code
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
+    assert (
+        actual_response.message.error.message
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
 
 
 @pytest.mark.asyncio
@@ -647,8 +659,8 @@ async def test_resolve_async_invalid_signature(
             timestamp=datetime.utcnow().isoformat(),
             ack_status="NACK",
             error={
-                "code": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-                "message": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+                "code": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
+                "message": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
             },
         )
     )
@@ -692,8 +704,14 @@ async def test_resolve_async_invalid_signature(
     assert actual_response.message.correlation_id == "error_correlation_id"
     assert actual_response.message.ack_status == AsyncAck.NACK
     assert actual_response.message.timestamp == error_response.message.timestamp
-    assert actual_response.message.error.code == "INVALID JWT SIGNATURE"
-    assert actual_response.message.error.message == "INVALID JWT SIGNATURE"
+    assert (
+        actual_response.message.error.code
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
+    assert (
+        actual_response.message.error.message
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
 
 
 @pytest.mark.asyncio
@@ -883,8 +901,8 @@ async def test_unlink_async_invalid_signature(
             timestamp=datetime.utcnow().isoformat(),
             ack_status="NACK",
             error={
-                "code": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-                "message": SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+                "code": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
+                "message": SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value,
             },
         )
     )
@@ -928,8 +946,14 @@ async def test_unlink_async_invalid_signature(
     assert actual_response.message.correlation_id == "error_correlation_id"
     assert actual_response.message.ack_status == AsyncAck.NACK
     assert actual_response.message.timestamp == error_response.message.timestamp
-    assert actual_response.message.error.code == "INVALID JWT SIGNATURE"
-    assert actual_response.message.error.message == "INVALID JWT SIGNATURE"
+    assert (
+        actual_response.message.error.code
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
+    assert (
+        actual_response.message.error.message
+        == SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid.value
+    )
 
 
 @pytest.mark.asyncio

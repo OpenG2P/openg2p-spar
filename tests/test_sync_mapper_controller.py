@@ -4,7 +4,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from openg2p_g2pconnect_common_lib.schemas import (
     RequestHeader,
-    SecurityErrorCodes,
     StatusEnum,
     SyncResponseHeader,
     SyncResponseStatusReasonCodeEnum,
@@ -53,8 +52,8 @@ from openg2p_spar_mapper_api.services import (
 def mock_validate_signature(is_signature_valid):
     if not is_signature_valid:
         raise RequestValidationException(
-            code=SecurityErrorCodes.INVALID_JWT_SIGNATURE,
-            message=SecurityErrorCodes.INVALID_JWT_SIGNATURE,
+            code=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid,
+            message=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid,
         )
 
 
