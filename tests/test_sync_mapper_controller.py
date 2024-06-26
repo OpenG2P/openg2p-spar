@@ -136,7 +136,7 @@ def setup_link_controller():
                 link_request=[
                     SingleLinkRequest(
                         reference_id="test_ref",
-                        timestamp=datetime.now(),
+                        timestamp=str(datetime.now()),
                         id="test_id",
                         fa="test_fa",
                     )
@@ -230,7 +230,7 @@ def setup_update_controller():
                 update_request=[
                     SingleUpdateRequest(
                         reference_id="test_ref",
-                        timestamp=datetime.now(),
+                        timestamp=str(datetime.now()),
                         id="test_id",
                         fa="test_fa",
                     )
@@ -324,7 +324,7 @@ def setup_resolve_controller():
                 resolve_request=[
                     SingleResolveRequest(
                         reference_id="test_ref",
-                        timestamp=datetime.now(),
+                        timestamp=str(datetime.now()),
                         id="test_id",
                         fa="test_fa",
                     )
@@ -418,7 +418,7 @@ def setup_unlink_controller():
                 unlink_request=[
                     SingleUnlinkRequest(
                         reference_id="test_ref",
-                        timestamp=datetime.now(),
+                        timestamp=str(datetime.now()),
                         id="test_id",
                         fa="test_fa",
                     )

@@ -116,7 +116,7 @@ async def test_link_async(
             link_request=[
                 SingleLinkRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -200,7 +200,7 @@ async def test_link_async_invalid_signature(
             link_request=[
                 SingleLinkRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -279,7 +279,7 @@ async def test_handle_service_and_link_callback(
             link_request=[
                 SingleLinkRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -360,7 +360,7 @@ async def test_update_async(
             update_request=[
                 SingleUpdateRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -444,7 +444,7 @@ async def test_update_async_invalid_signature(
             update_request=[
                 SingleUpdateRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -523,7 +523,7 @@ async def test_handle_service_and_update_callback(
             update_request=[
                 SingleUpdateRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -602,7 +602,7 @@ async def test_resolve_async(
             resolve_request=[
                 SingleResolveRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -686,7 +686,7 @@ async def test_resolve_async_invalid_signature(
             resolve_request=[
                 SingleResolveRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -765,7 +765,7 @@ async def test_handle_service_and_resolve_callback(
             resolve_request=[
                 SingleResolveRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -844,7 +844,7 @@ async def test_unlink_async(
             unlink_request=[
                 SingleUnlinkRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -928,7 +928,7 @@ async def test_unlink_async_invalid_signature(
             unlink_request=[
                 SingleUnlinkRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
@@ -1007,7 +1007,7 @@ async def test_handle_service_and_unlink_callback(
             unlink_request=[
                 SingleUnlinkRequest(
                     reference_id="test_ref",
-                    timestamp=datetime.utcnow(),
+                    timestamp=str(datetime.now()),
                     id="test_id",
                     fa="test_fa",
                 )
