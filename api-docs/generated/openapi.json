@@ -1285,7 +1285,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "id": {
@@ -1439,7 +1438,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "fa": {
@@ -1629,7 +1627,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "id": {
@@ -1791,7 +1788,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "id": {
