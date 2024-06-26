@@ -29,7 +29,7 @@ USER ${container_user}
 ENV SPAR_MAPPER_WORKER_TYPE=local
 ENV SPAR_MAPPER_HOST=0.0.0.0
 ENV SPAR_MAPPER_PORT=8000
-ENV SPAR_MAPPER_NO_OF_WORKERS=3
+ENV SPAR_MAPPER_NO_OF_WORKERS=8
 
 CMD python3 main.py migrate; \
     gunicorn "main:app" --workers ${SPAR_MAPPER_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_MAPPER_HOST}:${SPAR_MAPPER_PORT}
