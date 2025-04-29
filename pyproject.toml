@@ -20,6 +20,8 @@ dependencies = [
     "openg2p-g2pconnect-common-lib",
     "openg2p-g2pconnect-mapper-lib",
     "gunicorn ~=22.0.0",
+    "asyncpg",
+    "psycopg2"
 ]
 dynamic = ["version"]
 
