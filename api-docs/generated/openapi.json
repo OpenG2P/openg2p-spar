@@ -920,17 +920,6 @@
       },
       "LinkRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -968,17 +957,6 @@
       },
       "LinkResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -1138,17 +1116,6 @@
       },
       "ResolveRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -1186,17 +1153,6 @@
       },
       "ResolveResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -2086,23 +2042,15 @@
           "rjct.total_count.invalid",
           "rjct.total_count.limit_exceeded",
           "rjct.errors.too_many",
-          "rjct.jwt.invalid"
+          "rjct.jwt.invalid",
+          "rjct.file.size.exceeded",
+          "rjct.file.type.invalid",
+          "rjct.virus.check.failed"
         ],
         "title": "SyncResponseStatusReasonCodeEnum"
       },
       "UnlinkRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -2140,17 +2088,6 @@
       },
       "UnlinkResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -2218,17 +2155,6 @@
       },
       "UpdateRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -2266,17 +2192,6 @@
       },
       "UpdateResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
