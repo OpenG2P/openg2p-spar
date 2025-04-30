@@ -1,15 +1,22 @@
 from openg2p_fastapi_common.service import BaseService
 from openg2p_g2pconnect_common_lib.schemas import (
-    SyncResponseStatusReasonCodeEnum,
-)
-from openg2p_g2pconnect_common_lib.schemas.async_schemas import (
     AsyncResponseStatusReasonCodeEnum,
+    SyncResponseStatusReasonCodeEnum,
 )
 
 from .exceptions import RequestValidationException
 
 
 class RequestValidation(BaseService):
+    def validate_signature(self, is_signature_valid) -> None:
+        if not is_signature_valid:
+            raise RequestValidationException(
+                code=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid,
+                message=SyncResponseStatusReasonCodeEnum.rjct_jwt_invalid,
+            )
+
+        return None
+
     def validate_link_request_header(self, request) -> None:
         if request.header.action != "link":
             raise RequestValidationException(

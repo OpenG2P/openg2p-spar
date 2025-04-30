@@ -1,6 +1,6 @@
 from typing import Optional
 
-from openg2p_fastapi_common.config import Settings as BaseSettings
+from openg2p_g2pconnect_common_lib.config import Settings as BaseSettings
 from pydantic import AnyUrl
 from pydantic_settings import SettingsConfigDict
 

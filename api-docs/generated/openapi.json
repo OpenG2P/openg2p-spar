@@ -92,7 +92,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/sync/update": {
@@ -173,7 +178,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/sync/resolve": {
@@ -254,7 +264,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/sync/unlink": {
@@ -335,7 +350,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/async/link": {
@@ -416,7 +436,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/async/update": {
@@ -497,7 +522,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/async/resolve": {
@@ -578,7 +608,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/async/unlink": {
@@ -659,7 +694,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "JWTSignatureValidator": []
+          }
+        ]
       }
     },
     "/ping": {
@@ -880,17 +920,6 @@
       },
       "LinkRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -928,17 +957,6 @@
       },
       "LinkResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -1098,17 +1116,6 @@
       },
       "ResolveRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -1146,17 +1153,6 @@
       },
       "ResolveResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -1245,7 +1241,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "id": {
@@ -1399,7 +1394,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "fa": {
@@ -1589,7 +1583,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "id": {
@@ -1751,7 +1744,6 @@
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time",
             "title": "Timestamp"
           },
           "id": {
@@ -2019,6 +2011,7 @@
           "meta": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -2048,23 +2041,16 @@
           "rjct.action.not_supported",
           "rjct.total_count.invalid",
           "rjct.total_count.limit_exceeded",
-          "rjct.errors.too_many"
+          "rjct.errors.too_many",
+          "rjct.jwt.invalid",
+          "rjct.file.size.exceeded",
+          "rjct.file.type.invalid",
+          "rjct.virus.check.failed"
         ],
         "title": "SyncResponseStatusReasonCodeEnum"
       },
       "UnlinkRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -2102,17 +2088,6 @@
       },
       "UnlinkResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -2180,17 +2155,6 @@
       },
       "UpdateRequest": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/RequestHeader"
           },
@@ -2228,17 +2192,6 @@
       },
       "UpdateResponse": {
         "properties": {
-          "signature": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Signature"
-          },
           "header": {
             "$ref": "#/components/schemas/SyncResponseHeader"
           },
@@ -2336,6 +2289,12 @@
           "type"
         ],
         "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "JWTSignatureValidator": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }
