@@ -1,4 +1,4 @@
-# OpenG2P SPAR Mapper
+# OpenG2P SPAR Mapper API
 [![Pre-commit Status](https://github.com/OpenG2P/openg2p-spar-mapper-api/actions/workflows/pre-commit.yml/badge.svg?branch=develop)](https://github.com/OpenG2P/openg2p-spar-mapper-api/actions/workflows/pre-commit.yml?query=branch%3Adevelop)
 [![Build Status](https://github.com/OpenG2P/openg2p-spar-mapper-api/actions/workflows/test.yml/badge.svg?branch=develop)](https://github.com/OpenG2P/openg2p-spar-mapper-api/actions/workflows/test.yml?query=branch%3Adevelop)
 [![codecov](https://codecov.io/gh/OpenG2P/openg2p-spar-mapper-api/branch/develop/graph/badge.svg)](https://codecov.io/gh/OpenG2P/openg2p-spar-mapper-api)
