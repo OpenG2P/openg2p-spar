@@ -64,9 +64,7 @@ def setup_link_controller():
     request_validation_mock = MagicMock()
     request_validation_mock.validate_request = MagicMock(return_value=True)
     request_validation_mock.validate_link_request_header = MagicMock(return_value=True)
-    request_validation_mock.validate_signature = MagicMock(
-        side_effect=mock_validate_signature
-    )
+    request_validation_mock.validate_signature = MagicMock(side_effect=mock_validate_signature)
     mock_link_response = LinkResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -94,9 +92,7 @@ def setup_link_controller():
     )
     response_helper_link_mock = MagicMock()
 
-    response_helper_link_mock.construct_success_sync_link_response.return_value = (
-        mock_link_response
-    )
+    response_helper_link_mock.construct_success_sync_link_response.return_value = mock_link_response
 
     mock_error_link_response = LinkResponse(
         header=SyncResponseHeader(
@@ -112,9 +108,7 @@ def setup_link_controller():
             link_response=[],
         ),
     )
-    response_helper_link_mock.construct_error_sync_response.return_value = (
-        mock_error_link_response
-    )
+    response_helper_link_mock.construct_error_sync_response.return_value = mock_error_link_response
 
     with patch(
         "openg2p_spar_mapper_api.services.RequestValidation.get_component",
@@ -153,12 +147,8 @@ def setup_update_controller():
 
     request_validation_mock = MagicMock()
     request_validation_mock.validate_request = MagicMock(return_value=True)
-    request_validation_mock.validate_update_request_header = MagicMock(
-        return_value=True
-    )
-    request_validation_mock.validate_signature = MagicMock(
-        side_effect=mock_validate_signature
-    )
+    request_validation_mock.validate_update_request_header = MagicMock(return_value=True)
+    request_validation_mock.validate_signature = MagicMock(side_effect=mock_validate_signature)
     mock_update_response = UpdateResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -187,9 +177,7 @@ def setup_update_controller():
 
     response_helper_update_mock = MagicMock()
 
-    response_helper_update_mock.construct_success_sync_update_response.return_value = (
-        mock_update_response
-    )
+    response_helper_update_mock.construct_success_sync_update_response.return_value = mock_update_response
 
     mock_error_update_response = UpdateResponse(
         header=SyncResponseHeader(
@@ -206,9 +194,7 @@ def setup_update_controller():
         ),
     )
 
-    response_helper_update_mock.construct_error_sync_response.return_value = (
-        mock_error_update_response
-    )
+    response_helper_update_mock.construct_error_sync_response.return_value = mock_error_update_response
 
     with patch(
         "openg2p_spar_mapper_api.services.RequestValidation.get_component",
@@ -247,12 +233,8 @@ def setup_resolve_controller():
 
     request_validation_mock = MagicMock()
     request_validation_mock.validate_request = MagicMock(return_value=True)
-    request_validation_mock.validate_resolve_request_header = MagicMock(
-        return_value=True
-    )
-    request_validation_mock.validate_signature = MagicMock(
-        side_effect=mock_validate_signature
-    )
+    request_validation_mock.validate_resolve_request_header = MagicMock(return_value=True)
+    request_validation_mock.validate_signature = MagicMock(side_effect=mock_validate_signature)
     mock_resolve_response = ResolveResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -281,9 +263,7 @@ def setup_resolve_controller():
 
     response_helper_resolve_mock = MagicMock()
 
-    response_helper_resolve_mock.construct_success_sync_resolve_response.return_value = (
-        mock_resolve_response
-    )
+    response_helper_resolve_mock.construct_success_sync_resolve_response.return_value = mock_resolve_response
 
     mock_error_resolve_response = ResolveResponse(
         header=SyncResponseHeader(
@@ -300,9 +280,7 @@ def setup_resolve_controller():
         ),
     )
 
-    response_helper_resolve_mock.construct_error_sync_response.return_value = (
-        mock_error_resolve_response
-    )
+    response_helper_resolve_mock.construct_error_sync_response.return_value = mock_error_resolve_response
 
     with patch(
         "openg2p_spar_mapper_api.services.RequestValidation.get_component",
@@ -341,12 +319,8 @@ def setup_unlink_controller():
 
     request_validation_mock = MagicMock()
     request_validation_mock.validate_request = MagicMock(return_value=True)
-    request_validation_mock.validate_unlink_request_header = MagicMock(
-        return_value=True
-    )
-    request_validation_mock.validate_signature = MagicMock(
-        side_effect=mock_validate_signature
-    )
+    request_validation_mock.validate_unlink_request_header = MagicMock(return_value=True)
+    request_validation_mock.validate_signature = MagicMock(side_effect=mock_validate_signature)
     mock_unlink_response = UnlinkResponse(
         header=SyncResponseHeader(
             message_id="test_message_id",
@@ -375,9 +349,7 @@ def setup_unlink_controller():
 
     response_helper_unlink_mock = MagicMock()
 
-    response_helper_unlink_mock.construct_success_sync_unlink_response.return_value = (
-        mock_unlink_response
-    )
+    response_helper_unlink_mock.construct_success_sync_unlink_response.return_value = mock_unlink_response
 
     mock_error_unlink_response = UnlinkResponse(
         header=SyncResponseHeader(
@@ -394,9 +366,7 @@ def setup_unlink_controller():
         ),
     )
 
-    response_helper_unlink_mock.construct_error_sync_response.return_value = (
-        mock_error_unlink_response
-    )
+    response_helper_unlink_mock.construct_error_sync_response.return_value = mock_error_unlink_response
 
     with patch(
         "openg2p_spar_mapper_api.services.RequestValidation.get_component",
@@ -453,9 +423,7 @@ async def test_link_sync_invalid_signature(setup_link_controller):
 async def test_update_sync_success(setup_update_controller):
     controller, mock_update_request = setup_update_controller
     assert controller is not None
-    response = await controller.update_sync(
-        mock_update_request, is_signature_valid=True
-    )
+    response = await controller.update_sync(mock_update_request, is_signature_valid=True)
     assert response.header.status == StatusEnum.succ
     assert response.message.transaction_id == "trans_id"
     controller.mapper_service.update.assert_called_once_with(mock_update_request)
@@ -466,9 +434,7 @@ async def test_update_sync_invalid_signature(setup_update_controller):
     controller, mock_update_request = setup_update_controller
     assert controller is not None
 
-    response = await controller.update_sync(
-        mock_update_request, is_signature_valid=False
-    )
+    response = await controller.update_sync(mock_update_request, is_signature_valid=False)
     assert response.header.status == StatusEnum.rjct
     assert response.header.status_reason_message == "Validation error"
 
@@ -477,9 +443,7 @@ async def test_update_sync_invalid_signature(setup_update_controller):
 async def test_resolve_sync_success(setup_resolve_controller):
     controller, mock_resolve_request = setup_resolve_controller
     assert controller is not None
-    response = await controller.resolve_sync(
-        mock_resolve_request, is_signature_valid=True
-    )
+    response = await controller.resolve_sync(mock_resolve_request, is_signature_valid=True)
     assert response.header.status == StatusEnum.succ
     assert response.message.transaction_id == "trans_id"
     controller.mapper_service.resolve.assert_called_once_with(mock_resolve_request)
@@ -490,9 +454,7 @@ async def test_resolve_sync_invalid_signature(setup_resolve_controller):
     controller, mock_resolve_request = setup_resolve_controller
     assert controller is not None
 
-    response = await controller.resolve_sync(
-        mock_resolve_request, is_signature_valid=False
-    )
+    response = await controller.resolve_sync(mock_resolve_request, is_signature_valid=False)
     assert response.header.status == StatusEnum.rjct
     assert response.header.status_reason_message == "Validation error"
 
@@ -501,9 +463,7 @@ async def test_resolve_sync_invalid_signature(setup_resolve_controller):
 async def test_unlink_sync_success(setup_unlink_controller):
     controller, mock_unlink_request = setup_unlink_controller
     assert controller is not None
-    response = await controller.unlink_sync(
-        mock_unlink_request, is_signature_valid=True
-    )
+    response = await controller.unlink_sync(mock_unlink_request, is_signature_valid=True)
     assert response.header.status == StatusEnum.succ
     assert response.message.transaction_id == "trans_id"
     controller.mapper_service.unlink.assert_called_once_with(mock_unlink_request)
@@ -514,9 +474,7 @@ async def test_unlink_sync_invalid_signature(setup_unlink_controller):
     controller, mock_unlink_request = setup_unlink_controller
     assert controller is not None
 
-    response = await controller.unlink_sync(
-        mock_unlink_request, is_signature_valid=False
-    )
+    response = await controller.unlink_sync(mock_unlink_request, is_signature_valid=False)
     assert response.header.status == StatusEnum.rjct
     assert response.header.status_reason_message == "Validation error"
 
@@ -537,9 +495,7 @@ async def test_link_sync_validation_error(setup_link_controller):
         "validate_link_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.link_sync(
-            mock_link_request, is_signature_valid=True
-        )
+        response = await controller.link_sync(mock_link_request, is_signature_valid=True)
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.link.assert_not_called()
@@ -561,9 +517,7 @@ async def test_update_sync_validation_error(setup_update_controller):
         "validate_update_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.update_sync(
-            mock_update_request, is_signature_valid=True
-        )
+        response = await controller.update_sync(mock_update_request, is_signature_valid=True)
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.update.assert_not_called()
@@ -585,9 +539,7 @@ async def test_resolve_sync_validation_error(setup_resolve_controller):
         "validate_resolve_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.resolve_sync(
-            mock_resolve_request, is_signature_valid=True
-        )
+        response = await controller.resolve_sync(mock_resolve_request, is_signature_valid=True)
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.resolve.assert_not_called()
@@ -609,9 +561,7 @@ async def test_unlink_sync_validation_error(setup_unlink_controller):
         "validate_unlink_request_header",
         side_effect=validation_error,
     ):
-        response = await controller.unlink_sync(
-            mock_unlink_request, is_signature_valid=True
-        )
+        response = await controller.unlink_sync(mock_unlink_request, is_signature_valid=True)
         assert response.header.status == StatusEnum.rjct
         assert validation_error.message in response.header.status_reason_message
         controller.mapper_service.unlink.assert_not_called()

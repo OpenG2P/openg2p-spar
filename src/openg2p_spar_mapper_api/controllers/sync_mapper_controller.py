@@ -1,3 +1,4 @@
+from functools import cached_property
 from typing import Annotated
 
 from fastapi import Depends
@@ -29,8 +30,6 @@ class SyncMapperController(BaseController):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.mapper_service = MapperService.get_component()
-
         self.router.prefix += "/sync"
         self.router.tags += ["G2PConnect Mapper Sync"]
 
@@ -59,27 +58,33 @@ class SyncMapperController(BaseController):
             methods=["POST"],
         )
 
+    @cached_property
+    def mapper_service(self) -> MapperService:
+        return MapperService.get_component()
+
+    @cached_property
+    def request_validation(self) -> RequestValidation:
+        return RequestValidation.get_component()
+
+    @cached_property
+    def sync_response_helper(self) -> SyncResponseHelper:
+        return SyncResponseHelper.get_component()
+
     async def link_sync(
         self,
         link_request: LinkRequest,
         is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
-            RequestValidation.get_component().validate_signature(is_signature_valid)
-            RequestValidation.get_component().validate_request(link_request)
-            RequestValidation.get_component().validate_link_request_header(link_request)
+            self.request_validation.validate_signature(is_signature_valid)
+            self.request_validation.validate_request(link_request)
+            self.request_validation.validate_link_request_header(link_request)
         except RequestValidationException as e:
-            error_response = (
-                SyncResponseHelper.get_component().construct_error_sync_response(
-                    link_request, e
-                )
-            )
+            error_response = self.sync_response_helper.construct_error_sync_response(link_request, e)
             return error_response
 
-        single_link_responses: list[
-            SingleLinkResponse
-        ] = await self.mapper_service.link(link_request)
-        return SyncResponseHelper.get_component().construct_success_sync_link_response(
+        single_link_responses: list[SingleLinkResponse] = await self.mapper_service.link(link_request)
+        return self.sync_response_helper.construct_success_sync_link_response(
             link_request,
             single_link_responses,
         )
@@ -90,27 +95,17 @@ class SyncMapperController(BaseController):
         is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
-            RequestValidation.get_component().validate_signature(is_signature_valid)
-            RequestValidation.get_component().validate_request(update_request)
-            RequestValidation.get_component().validate_update_request_header(
-                update_request
-            )
+            self.request_validation.validate_signature(is_signature_valid)
+            self.request_validation.validate_request(update_request)
+            self.request_validation.validate_update_request_header(update_request)
         except RequestValidationException as e:
-            error_response = (
-                SyncResponseHelper.get_component().construct_error_sync_response(
-                    update_request, e
-                )
-            )
+            error_response = self.sync_response_helper.construct_error_sync_response(update_request, e)
             return error_response
 
-        single_update_responses: list[
-            SingleUpdateResponse
-        ] = await self.mapper_service.update(update_request)
-        return (
-            SyncResponseHelper.get_component().construct_success_sync_update_response(
-                update_request,
-                single_update_responses,
-            )
+        single_update_responses: list[SingleUpdateResponse] = await self.mapper_service.update(update_request)
+        return self.sync_response_helper.construct_success_sync_update_response(
+            update_request,
+            single_update_responses,
         )
 
     async def resolve_sync(
@@ -119,27 +114,19 @@ class SyncMapperController(BaseController):
         is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
-            RequestValidation.get_component().validate_signature(is_signature_valid)
-            RequestValidation.get_component().validate_request(resolve_request)
-            RequestValidation.get_component().validate_resolve_request_header(
-                resolve_request
-            )
+            self.request_validation.validate_signature(is_signature_valid)
+            self.request_validation.validate_request(resolve_request)
+            self.request_validation.validate_resolve_request_header(resolve_request)
         except RequestValidationException as e:
-            error_response = (
-                SyncResponseHelper.get_component().construct_error_sync_response(
-                    resolve_request, e
-                )
-            )
+            error_response = self.sync_response_helper.construct_error_sync_response(resolve_request, e)
             return error_response
 
-        single_resolve_responses: list[
-            SingleResolveResponse
-        ] = await self.mapper_service.resolve(resolve_request)
-        return (
-            SyncResponseHelper.get_component().construct_success_sync_resolve_response(
-                resolve_request,
-                single_resolve_responses,
-            )
+        single_resolve_responses: list[SingleResolveResponse] = await self.mapper_service.resolve(
+            resolve_request
+        )
+        return self.sync_response_helper.construct_success_sync_resolve_response(
+            resolve_request,
+            single_resolve_responses,
         )
 
     async def unlink_sync(
@@ -148,25 +135,17 @@ class SyncMapperController(BaseController):
         is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ):
         try:
-            RequestValidation.get_component().validate_signature(is_signature_valid)
-            RequestValidation.get_component().validate_request(unlink_request)
-            RequestValidation.get_component().validate_unlink_request_header(
-                unlink_request
-            )
+            self.request_validation.validate_signature(is_signature_valid)
+            self.request_validation.validate_request(unlink_request)
+            self.request_validation.validate_unlink_request_header(unlink_request)
         except RequestValidationException as e:
-            error_response = (
-                SyncResponseHelper.get_component().construct_error_sync_response(
-                    unlink_request, e
-                )
-            )
+            error_response = self.sync_response_helper.construct_error_sync_response(unlink_request, e)
             return error_response
 
-        single_unlink_responses: list[
-            SingleResolveResponse
-        ] = await self.mapper_service.unlink(unlink_request)
-        return (
-            SyncResponseHelper.get_component().construct_success_sync_unlink_response(
-                unlink_request,
-                single_unlink_responses,
-            )
+        single_unlink_responses: list[SingleResolveResponse] = await self.mapper_service.unlink(
+            unlink_request
+        )
+        return self.sync_response_helper.construct_success_sync_unlink_response(
+            unlink_request,
+            single_unlink_responses,
         )

@@ -54,11 +54,7 @@ class SyncResponseHelper(BaseService):
         )
         total_count = len(link_response_message.link_response)
         completed_count = len(
-            [
-                link
-                for link in link_response_message.link_response
-                if link.status == StatusEnum.succ
-            ]
+            [link for link in link_response_message.link_response if link.status == StatusEnum.succ]
         )
         return LinkResponse(
             header=SyncResponseHeader(
@@ -92,11 +88,7 @@ class SyncResponseHelper(BaseService):
         )
         total_count = len(update_response_message.update_response)
         completed_count = len(
-            [
-                update
-                for update in update_response_message.update_response
-                if update.status == StatusEnum.succ
-            ]
+            [update for update in update_response_message.update_response if update.status == StatusEnum.succ]
         )
         return UpdateResponse(
             header=SyncResponseHeader(
@@ -168,11 +160,7 @@ class SyncResponseHelper(BaseService):
         )
         total_count = len(unlink_response_message.unlink_response)
         completed_count = len(
-            [
-                unlink
-                for unlink in unlink_response_message.unlink_response
-                if unlink.status == StatusEnum.succ
-            ]
+            [unlink for unlink in unlink_response_message.unlink_response if unlink.status == StatusEnum.succ]
         )
         return UnlinkResponse(
             header=SyncResponseHeader(
@@ -248,9 +236,7 @@ class AsyncResponseHelper(BaseService):
         single_link_responses: list[SingleLinkResponse],
     ) -> AsyncCallbackRequest:
         total_count = len(single_link_responses)
-        completed_count = len(
-            [link for link in single_link_responses if link.status == StatusEnum.succ]
-        )
+        completed_count = len([link for link in single_link_responses if link.status == StatusEnum.succ])
         link_request_message: LinkRequestMessage = link_request.message
 
         link_response_message: LinkResponseMessage = LinkResponseMessage(
@@ -286,11 +272,7 @@ class AsyncResponseHelper(BaseService):
     ) -> AsyncCallbackRequest:
         total_count = len(single_update_responses)
         completed_count = len(
-            [
-                update
-                for update in single_update_responses
-                if update.status == StatusEnum.succ
-            ]
+            [update for update in single_update_responses if update.status == StatusEnum.succ]
         )
         update_request_message: UpdateRequestMessage = update_request.message
         update_response_message: UpdateResponseMessage = UpdateResponseMessage(
@@ -326,11 +308,7 @@ class AsyncResponseHelper(BaseService):
     ) -> AsyncCallbackRequest:
         total_count = len(single_resolve_responses)
         completed_count = len(
-            [
-                resolve
-                for resolve in single_resolve_responses
-                if resolve.status == StatusEnum.succ
-            ]
+            [resolve for resolve in single_resolve_responses if resolve.status == StatusEnum.succ]
         )
         resolve_request_message: ResolveRequestMessage = resolve_request.message
         resolve_response_message: ResolveResponseMessage = ResolveResponseMessage(
@@ -366,11 +344,7 @@ class AsyncResponseHelper(BaseService):
     ) -> AsyncCallbackRequest:
         total_count = len(single_unlink_responses)
         completed_count = len(
-            [
-                unlink
-                for unlink in single_unlink_responses
-                if unlink.status == StatusEnum.succ
-            ]
+            [unlink for unlink in single_unlink_responses if unlink.status == StatusEnum.succ]
         )
         unlink_request_message: UnlinkRequestMessage = unlink_request.message
         unlink_response_message: UnlinkResponseMessage = UnlinkResponseMessage(
