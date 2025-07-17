@@ -22,9 +22,7 @@ from .exceptions import (
 
 
 class IdFaMappingValidations(BaseService):
-    async def validate_link_request(
-        self, connection, single_link_request: SingleLinkRequest
-    ) -> None:
+    async def validate_link_request(self, connection, single_link_request: SingleLinkRequest) -> None:
         # Check if the ID is null
         if not single_link_request.id:
             raise LinkValidationException(
@@ -58,9 +56,7 @@ class IdFaMappingValidations(BaseService):
 
         return None
 
-    async def validate_update_request(
-        self, connection, single_update_request: SingleUpdateRequest
-    ) -> None:
+    async def validate_update_request(self, connection, single_update_request: SingleUpdateRequest) -> None:
         if not single_update_request.id:
             raise UpdateValidationException(
                 message="ID is null",
@@ -93,9 +89,7 @@ class IdFaMappingValidations(BaseService):
 
         return None
 
-    async def validate_resolve_request(
-        self, single_resolve_request: SingleResolveRequest
-    ) -> None:
+    async def validate_resolve_request(self, single_resolve_request: SingleResolveRequest) -> None:
         if not single_resolve_request.id and not single_resolve_request.fa:
             raise ResolveValidationException(
                 message="ID is required",
@@ -104,9 +98,7 @@ class IdFaMappingValidations(BaseService):
             )
         return None
 
-    async def validate_unlink_request(
-        self, connection, single_unlink_request: SingleUnlinkRequest
-    ) -> None:
+    async def validate_unlink_request(self, connection, single_unlink_request: SingleUnlinkRequest) -> None:
         if not single_unlink_request.id:
             raise UnlinkValidationException(
                 message="ID is null",
