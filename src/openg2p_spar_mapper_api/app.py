@@ -19,7 +19,6 @@ from .services import (
     IdFaMappingValidations,
     MapperService,
     RequestValidation,
-    SessionInitializer,
     SyncRequestHelper,
     SyncResponseHelper,
 )
@@ -29,7 +28,6 @@ class Initializer(BaseInitializer):
     def initialize(self, **kwargs):
         super().initialize()
 
-        SessionInitializer()
         MapperService()
         IdFaMappingValidations()
         SyncRequestHelper()
@@ -45,7 +43,6 @@ class Initializer(BaseInitializer):
         super().migrate_database(args)
 
         async def migrate():
-            print("Migrating database")
             await IdFaMapping.create_migrate()
 
         asyncio.run(migrate())

@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import uuid
-from functools import cached_property
 from typing import Annotated
 
 import httpx
@@ -51,6 +50,10 @@ async def _callback(async_call_back_request: AsyncCallbackRequest, url, url_suff
 
 
 class AsyncMapperController(BaseController):
+    mapper_service: MapperService = MapperService.get_cached_component()
+    request_validation: RequestValidation = RequestValidation.get_cached_component()
+    async_response_helper: AsyncResponseHelper = AsyncResponseHelper.get_cached_component()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -88,18 +91,6 @@ class AsyncMapperController(BaseController):
             responses={200: {"model": AsyncResponse}},
             methods=["POST"],
         )
-
-    @cached_property
-    def mapper_service(self) -> MapperService:
-        return MapperService.get_component()
-
-    @cached_property
-    def request_validation(self) -> RequestValidation:
-        return RequestValidation.get_component()
-
-    @cached_property
-    def async_response_helper(self) -> AsyncResponseHelper:
-        return AsyncResponseHelper.get_component()
 
     async def link_async(
         self,
@@ -194,10 +185,10 @@ class AsyncMapperController(BaseController):
                 link_request
             )
 
-            async_call_back_request: (
-                AsyncCallbackRequest
-            ) = self.async_response_helper.construct_success_async_callback_link_request(
-                link_request, correlation_id, single_link_responses
+            async_call_back_request: AsyncCallbackRequest = (
+                self.async_response_helper.construct_success_async_callback_link_request(
+                    link_request, correlation_id, single_link_responses
+                )
             )
             await self.make_callback(
                 async_call_back_request,
@@ -220,10 +211,10 @@ class AsyncMapperController(BaseController):
             self.request_validation.validate_async_request(request)
             self.request_validation.validate_update_async_request_header(request)
             single_update_responses: list[SingleUpdateResponse] = await self.action_to_method[action](request)
-            async_call_back_request: (
-                AsyncCallbackRequest
-            ) = self.async_response_helper.construct_success_async_callback_update_request(
-                request, correlation_id, single_update_responses
+            async_call_back_request: AsyncCallbackRequest = (
+                self.async_response_helper.construct_success_async_callback_update_request(
+                    request, correlation_id, single_update_responses
+                )
             )
             await self.make_callback(
                 async_call_back_request,
@@ -246,10 +237,10 @@ class AsyncMapperController(BaseController):
             single_resolve_responses: list[SingleResolveResponse] = await self.action_to_method[action](
                 request
             )
-            async_call_back_request: (
-                AsyncCallbackRequest
-            ) = self.async_response_helper.construct_success_async_callback_resolve_request(
-                request, correlation_id, single_resolve_responses
+            async_call_back_request: AsyncCallbackRequest = (
+                self.async_response_helper.construct_success_async_callback_resolve_request(
+                    request, correlation_id, single_resolve_responses
+                )
             )
             await self.make_callback(
                 async_call_back_request,
@@ -270,10 +261,10 @@ class AsyncMapperController(BaseController):
             self.request_validation.validate_async_request(request)
             self.request_validation.validate_unlink_async_request_header(request)
             single_unlink_responses: list[SingleUnlinkResponse] = await self.action_to_method[action](request)
-            async_call_back_request: (
-                AsyncCallbackRequest
-            ) = self.async_response_helper.construct_success_async_callback_unlink_request(
-                request, correlation_id, single_unlink_responses
+            async_call_back_request: AsyncCallbackRequest = (
+                self.async_response_helper.construct_success_async_callback_unlink_request(
+                    request, correlation_id, single_unlink_responses
+                )
             )
             await self.make_callback(
                 async_call_back_request,
