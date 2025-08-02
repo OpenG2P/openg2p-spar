@@ -17,7 +17,6 @@ ADD . /app/src
 RUN mv /app/src/main.py /app
 
 RUN python3 -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=openg2p-fastapi-common  # to_be_removed_on_tag
-RUN python3 -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=openg2p-fastapi-auth  # to_be_removed_on_tag
 RUN python3 -m pip install git+https://github.com/openg2p/openg2p-g2pconnect-common-lib@1.1\#subdirectory=openg2p-g2pconnect-common-lib # to_be_removed_on_tag
 RUN python3 -m pip install git+https://github.com/openg2p/openg2p-g2pconnect-common-lib@1.1\#subdirectory=openg2p-g2pconnect-mapper-lib # to_be_removed_on_tag
 RUN python3 -m pip install -e /app/src
