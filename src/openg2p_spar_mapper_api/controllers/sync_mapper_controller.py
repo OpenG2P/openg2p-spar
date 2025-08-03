@@ -1,4 +1,3 @@
-from functools import cached_property
 from typing import Annotated
 
 from fastapi import Depends
@@ -27,6 +26,10 @@ from ..services import (
 
 
 class SyncMapperController(BaseController):
+    mapper_service: MapperService = MapperService.get_cached_component()
+    request_validation: RequestValidation = RequestValidation.get_cached_component()
+    sync_response_helper: SyncResponseHelper = SyncResponseHelper.get_cached_component()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -57,18 +60,6 @@ class SyncMapperController(BaseController):
             responses={200: {"model": UnlinkResponse}},
             methods=["POST"],
         )
-
-    @cached_property
-    def mapper_service(self) -> MapperService:
-        return MapperService.get_component()
-
-    @cached_property
-    def request_validation(self) -> RequestValidation:
-        return RequestValidation.get_component()
-
-    @cached_property
-    def sync_response_helper(self) -> SyncResponseHelper:
-        return SyncResponseHelper.get_component()
 
     async def link_sync(
         self,

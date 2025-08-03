@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from functools import cached_property
 
 from openg2p_fastapi_common.context import dbengine
 from openg2p_fastapi_common.service import BaseService
@@ -26,7 +25,7 @@ from openg2p_g2pconnect_mapper_lib.schemas import (
     UpdateStatusReasonCode,
 )
 from sqlalchemy import delete, select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker
 
 from ..config import Settings
 from ..models import IdFaMapping
@@ -37,16 +36,13 @@ from ..services.exceptions import (
     UpdateValidationException,
 )
 from ..services.id_fa_mapping_validations import IdFaMappingValidations
-from ..services.session_service import SessionInitializer
 
 _config = Settings.get_config()
 _logger = logging.getLogger(_config.logging_default_logger_name)
 
 
 class MapperService(BaseService):
-    @cached_property
-    def id_fa_mappings(self) -> IdFaMappingValidations:
-        return IdFaMappingValidations.get_component()
+    id_fa_mappings: IdFaMappingValidations = IdFaMappingValidations.get_cached_component()
 
     async def link(self, link_request: LinkRequest):
         session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
@@ -194,9 +190,8 @@ class MapperService(BaseService):
         )
 
     async def resolve(self, resolve_request: ResolveRequest):
-        session_initializer = SessionInitializer.get_component()
-        session: AsyncSession = await session_initializer.get_session_from_pool()
-        async with session.begin():
+        session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
+        async with session_maker() as session:
             resolve_request_message: ResolveRequestMessage = resolve_request.message
 
             # Collect all ID values for bulk query

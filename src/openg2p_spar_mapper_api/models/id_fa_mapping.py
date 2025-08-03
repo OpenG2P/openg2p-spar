@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from openg2p_fastapi_common.context import dbengine
 from openg2p_fastapi_common.models import BaseORMModelWithTimes
@@ -13,10 +13,10 @@ class IdFaMapping(BaseORMModelWithTimes):
     id_value: Mapped[str] = mapped_column(String(), index=True, unique=True)
     fa_value: Mapped[str] = mapped_column(String(), index=True)
 
-    name: Mapped[Optional[str]] = mapped_column(String())
-    phone: Mapped[Optional[str]] = mapped_column(String())
+    name: Mapped[str | None] = mapped_column(String())
+    phone: Mapped[str | None] = mapped_column(String())
 
-    additional_info: Mapped[Optional[List[Dict[str, Any]]]] = mapped_column(JSON(), default=None)
+    additional_info: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON(), default=None)
 
     @classmethod
     async def get_all_by_query(cls, session=None, **kwargs):

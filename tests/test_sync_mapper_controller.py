@@ -40,6 +40,7 @@ from openg2p_g2pconnect_mapper_lib.schemas.update import (
     UpdateResponse,
     UpdateResponseMessage,
 )
+
 from openg2p_spar_mapper_api.controllers.sync_mapper_controller import (
     SyncMapperController,
 )

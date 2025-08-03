@@ -1,5 +1,3 @@
-from typing import Optional
-
 from openg2p_g2pconnect_mapper_lib.config import Settings as BaseSettings
 from pydantic import AnyUrl
 from pydantic_settings import SettingsConfigDict
@@ -22,7 +20,7 @@ class Settings(BaseSettings):
 
     db_dbname: str = "openg2p_spar_db"
 
-    default_callback_url: Optional[AnyUrl] = None
+    default_callback_url: AnyUrl | None = None
     default_callback_timeout: int = 10
 
     jwt_validate_keymanager_app_id: str = "OPENG2P_SPAR_MAPPER"
