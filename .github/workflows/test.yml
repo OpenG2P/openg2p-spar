@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         py:
-          - "3.10"
           - "3.11"
     services:
       postgres:
@@ -51,6 +50,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-auth-models
+          pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-auth
+          pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-common
           pip install pytest pytest-asyncio pytest-cov
           pip install -e ./openg2p-spar-models
           pip install -e ./openg2p-spar-mapper-core
@@ -75,7 +77,6 @@ jobs:
       fail-fast: false
       matrix:
         py:
-          - "3.10"
           - "3.11"
     services:
       postgres:
