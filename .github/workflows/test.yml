@@ -17,6 +17,9 @@ jobs:
   test:
     name: test with ${{ matrix.py }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: openg2p-spar-mapper-api
     strategy:
       fail-fast: false
       matrix:

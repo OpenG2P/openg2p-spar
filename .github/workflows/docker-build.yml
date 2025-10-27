@@ -12,6 +12,9 @@ jobs:
   docker-build:
     name: Docker Build and Push
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: openg2p-spar-mapper-api
     env:
       NAMESPACE: ${{ secrets.docker_hub_organisation || 'openg2p' }}
       SERVICE_NAME: openg2p-spar-mapper-api
