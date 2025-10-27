@@ -71,4 +71,3 @@ CMD gunicorn "main:app" \
     --bind ${SPAR_BENE_PORTAL_HOST}:${SPAR_BENE_PORTAL_PORT} \
     --access-logfile - \
     --error-logfile -
-
