@@ -5,4 +5,3 @@ This library contains models and schemas for the OpenG2P SPAR ecosystem. It is i
 ## Licenses
 
 This repository is licensed under [MPL-2.0](LICENSE).
-

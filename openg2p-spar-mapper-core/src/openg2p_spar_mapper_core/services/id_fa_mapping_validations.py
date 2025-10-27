@@ -1,5 +1,5 @@
 from openg2p_fastapi_common.service import BaseService
-from openg2p_spar_models.schemas import StatusEnum
+from openg2p_spar_models.models import IdFaMapping
 from openg2p_spar_models.schemas import (
     LinkStatusReasonCode,
     ResolveStatusReasonCode,
@@ -7,12 +7,12 @@ from openg2p_spar_models.schemas import (
     SingleResolveRequest,
     SingleUnlinkRequest,
     SingleUpdateRequest,
+    StatusEnum,
     UnlinkStatusReasonCode,
     UpdateStatusReasonCode,
 )
 from sqlalchemy import and_, select
 
-from openg2p_spar_models.models import IdFaMapping
 from ..exceptions import (
     LinkValidationException,
     ResolveValidationException,

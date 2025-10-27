@@ -1,15 +1,29 @@
 import logging
 from datetime import datetime
 
-from sqlalchemy import delete, select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from openg2p_spar_models.schemas import (
-    StatusEnum, LinkStatusReasonCode, SingleLinkRequest, SingleLinkResponse, LinkRequest, LinkResponse,
-    ResolveScope, ResolveStatusReasonCode, SingleResolveRequest, AccountProviderInfo, SingleResolveResponse, ResolveRequest, ResolveResponse,
-    UnlinkStatusReasonCode, SingleUnlinkRequest, SingleUnlinkResponse, UnlinkRequest, UnlinkResponse,
-    UpdateStatusReasonCode, SingleUpdateRequest, SingleUpdateResponse, UpdateRequest, UpdateResponse,
-)
+from openg2p_fastapi_common.context import dbengine
+from openg2p_fastapi_common.service import BaseService
 from openg2p_spar_models.models import IdFaMapping
+from openg2p_spar_models.schemas import (
+    LinkRequest,
+    ResolveRequest,
+    ResolveScope,
+    ResolveStatusReasonCode,
+    SingleLinkRequest,
+    SingleLinkResponse,
+    SingleResolveRequest,
+    SingleResolveResponse,
+    SingleUnlinkRequest,
+    SingleUnlinkResponse,
+    SingleUpdateRequest,
+    SingleUpdateResponse,
+    StatusEnum,
+    UnlinkRequest,
+    UpdateRequest,
+)
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import async_sessionmaker
+
 from ..exceptions import (
     LinkValidationException,
     ResolveValidationException,
@@ -17,10 +31,9 @@ from ..exceptions import (
     UpdateValidationException,
 )
 from .id_fa_mapping_validations import IdFaMappingValidations
-from openg2p_fastapi_common.context import dbengine
-from openg2p_fastapi_common.service import BaseService
 
 _logger = logging.getLogger("spar-mapper")
+
 
 class MapperService(BaseService):
     async def link(self, link_request: LinkRequest):
@@ -63,7 +76,9 @@ class MapperService(BaseService):
             active=True,
         )
 
-    def construct_single_link_response_for_success(self, single_link_request: SingleLinkRequest):
+    def construct_single_link_response_for_success(
+        self, single_link_request: SingleLinkRequest
+    ):
         return SingleLinkResponse(
             reference_id=single_link_request.reference_id,
             timestamp=datetime.now(),
@@ -75,7 +90,9 @@ class MapperService(BaseService):
             locale=single_link_request.locale,
         )
 
-    def construct_single_link_response_for_failure(self, single_link_request: SingleLinkRequest, error):
+    def construct_single_link_response_for_failure(
+        self, single_link_request: SingleLinkRequest, error
+    ):
         return SingleLinkResponse(
             reference_id=single_link_request.reference_id,
             timestamp=datetime.now(),
@@ -128,7 +145,9 @@ class MapperService(BaseService):
                 result.additional_info = single_update_request.additional_info
         await session.commit()
 
-    def construct_single_update_response_for_success(self, single_update_request: SingleUpdateRequest):
+    def construct_single_update_response_for_success(
+        self, single_update_request: SingleUpdateRequest
+    ):
         return SingleUpdateResponse(
             id=single_update_request.id,
             reference_id=single_update_request.reference_id,
@@ -140,7 +159,9 @@ class MapperService(BaseService):
             locale=single_update_request.locale,
         )
 
-    def construct_single_update_response_for_failure(self, single_update_request: SingleUpdateRequest, error):
+    def construct_single_update_response_for_failure(
+        self, single_update_request: SingleUpdateRequest, error
+    ):
         return SingleUpdateResponse(
             reference_id=single_update_request.reference_id,
             timestamp=datetime.now(),
@@ -156,7 +177,9 @@ class MapperService(BaseService):
         session_maker = async_sessionmaker(dbengine.get(), expire_on_commit=False)
         async with session_maker() as session:
             resolve_request_payload = resolve_request.request_body.request_payload
-            id_values = [req.id for req in resolve_request_payload.resolve_request if req.id]
+            id_values = [
+                req.id for req in resolve_request_payload.resolve_request if req.id
+            ]
             validated_requests = []
             single_resolve_responses = []
             for single_resolve_request in resolve_request_payload.resolve_request:
@@ -197,7 +220,9 @@ class MapperService(BaseService):
             await session.commit()
         return single_resolve_responses
 
-    def construct_single_resolve(self, single_resolve_request: SingleResolveRequest, result) -> SingleResolveResponse:
+    def construct_single_resolve(
+        self, single_resolve_request: SingleResolveRequest, result
+    ) -> SingleResolveResponse:
         single_response = self.construct_single_resolve_response_for_success(
             single_resolve_request
         )
@@ -207,14 +232,22 @@ class MapperService(BaseService):
                 single_response.additional_info = result.additional_info
                 single_response.fa = result.fa_value
                 single_response.id = result.id_value
-                single_response.status_reason_code = ResolveStatusReasonCode.succ_id_active
+                single_response.status_reason_code = (
+                    ResolveStatusReasonCode.succ_id_active
+                )
             else:
                 single_response.status = StatusEnum.succ
-                single_response.status_reason_code = ResolveStatusReasonCode.succ_id_active
+                single_response.status_reason_code = (
+                    ResolveStatusReasonCode.succ_id_active
+                )
         else:
             single_response.status = StatusEnum.succ
-            single_response.status_reason_code = ResolveStatusReasonCode.succ_id_not_found
-            single_response.status_reason_message = "Mapping not found against given ID."
+            single_response.status_reason_code = (
+                ResolveStatusReasonCode.succ_id_not_found
+            )
+            single_response.status_reason_message = (
+                "Mapping not found against given ID."
+            )
         return single_response
 
     async def construct_bulk_query(self, session, id_values):
@@ -223,7 +256,9 @@ class MapperService(BaseService):
         result = result.scalars().all()
         return stmt, result
 
-    def construct_single_resolve_response_for_success(self, single_resolve_request: SingleResolveRequest):
+    def construct_single_resolve_response_for_success(
+        self, single_resolve_request: SingleResolveRequest
+    ):
         return SingleResolveResponse(
             id=single_resolve_request.id,
             reference_id=single_resolve_request.reference_id,
@@ -236,7 +271,9 @@ class MapperService(BaseService):
             locale=single_resolve_request.locale,
         )
 
-    def construct_single_resolve_response_for_failure(self, single_resolve_request: SingleResolveRequest, error):
+    def construct_single_resolve_response_for_failure(
+        self, single_resolve_request: SingleResolveRequest, error
+    ):
         return SingleResolveResponse(
             reference_id=single_resolve_request.reference_id,
             timestamp=datetime.now(),
@@ -277,7 +314,9 @@ class MapperService(BaseService):
             await session.commit()
             return single_unlink_responses
 
-    def construct_single_unlink_response_for_success(self, single_unlink_request: SingleUnlinkRequest):
+    def construct_single_unlink_response_for_success(
+        self, single_unlink_request: SingleUnlinkRequest
+    ):
         return SingleUnlinkResponse(
             reference_id=single_unlink_request.reference_id,
             timestamp=datetime.now(),
@@ -289,7 +328,9 @@ class MapperService(BaseService):
             locale=single_unlink_request.locale,
         )
 
-    def construct_single_unlink_response_for_failure(self, single_unlink_request: SingleUnlinkRequest, error):
+    def construct_single_unlink_response_for_failure(
+        self, single_unlink_request: SingleUnlinkRequest, error
+    ):
         return SingleUnlinkResponse(
             reference_id=single_unlink_request.reference_id,
             timestamp=datetime.now(),

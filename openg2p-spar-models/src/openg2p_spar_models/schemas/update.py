@@ -1,15 +1,17 @@
 from datetime import datetime
 from enum import Enum
 from typing import List, Optional
-from pydantic import BaseModel, ConfigDict
+
 from openg2p_fastapi_common.schemas import (
     G2PRequest,
     G2PRequestBody,
     G2PResponse,
     G2PResponseBody,
 )
+from pydantic import BaseModel, ConfigDict
 
 from .link import StatusEnum
+
 
 class UpdateStatusReasonCode(Enum):
     rjct_reference_id_invalid = "rjct.reference_id.invalid"
@@ -18,6 +20,7 @@ class UpdateStatusReasonCode(Enum):
     rjct_beneficiary_name_invalid = "rjct.beneficiary_name.invalid"
     rjct_id_invalid = "rjct.id.invalid"
     rjct_fa_invalid = "rjct.fa.invalid"
+
 
 class SingleUpdateRequest(BaseModel):
     reference_id: str
@@ -29,15 +32,19 @@ class SingleUpdateRequest(BaseModel):
     additional_info: Optional[List[object]] = None
     locale: Optional[str] = "en"
 
+
 class UpdateRequestPayload(BaseModel):
     transaction_id: str
     update_request: List[SingleUpdateRequest]
 
+
 class UpdateRequestBody(G2PRequestBody):
     request_payload: UpdateRequestPayload
 
+
 class UpdateRequest(G2PRequest):
     request_body: UpdateRequestBody
+
 
 class SingleUpdateResponse(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
@@ -51,13 +58,16 @@ class SingleUpdateResponse(BaseModel):
     additional_info: Optional[List[object]] = None
     locale: Optional[str] = "en"
 
+
 class UpdateResponsePayload(BaseModel):
     transaction_id: Optional[str] = None
     correlation_id: Optional[str] = ""
     update_response: List[SingleUpdateResponse]
 
+
 class UpdateResponseBody(G2PResponseBody):
     response_payload: UpdateResponsePayload
+
 
 class UpdateResponse(G2PResponse):
     response_body: UpdateResponseBody

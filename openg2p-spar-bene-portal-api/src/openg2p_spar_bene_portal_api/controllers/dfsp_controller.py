@@ -7,8 +7,8 @@ from openg2p_spar_mapper_core.services import DfspService
 from openg2p_spar_models.schemas import (
     DfspProviderSchema,
     DfspProviderValueSchema,
-    ProviderTypeEnum,
 )
+
 from ..config import Settings
 
 _config = Settings.get_config()
@@ -18,7 +18,7 @@ _logger = logging.getLogger(_config.logging_default_logger_name)
 class DfspController(BaseController):
     """
     Controller for DFSP (Digital Financial Service Provider) endpoints.
-    
+
     Provides API endpoints for querying provider types and their values.
     """
 
@@ -79,7 +79,7 @@ class DfspController(BaseController):
     async def get_all_providers(self) -> List[DfspProviderSchema]:
         """
         Get all provider types.
-        
+
         Returns:
             List of all provider types
         """
@@ -95,10 +95,10 @@ class DfspController(BaseController):
     async def get_provider_by_type(self, provider_type: str) -> DfspProviderSchema:
         """
         Get a provider by type.
-        
+
         Args:
             provider_type: The provider type (BANK, EMAIL_WALLET, MOBILE_WALLET)
-            
+
         Returns:
             DfspProviderSchema for the requested type
         """
@@ -116,15 +116,17 @@ class DfspController(BaseController):
     async def get_provider_values(
         self,
         provider_type: str,
-        parent_id: Optional[int] = Query(None, description="Optional parent ID for filtering"),
+        parent_id: Optional[int] = Query(
+            None, description="Optional parent ID for filtering"
+        ),
     ) -> List[DfspProviderValueSchema]:
         """
         Get provider values filtered by type and optional parent.
-        
+
         Args:
             provider_type: The provider type (BANK, EMAIL_WALLET, MOBILE_WALLET)
             parent_id: Optional parent ID (for branches under a bank)
-            
+
         Returns:
             List of provider values matching the criteria
         """
@@ -146,10 +148,10 @@ class DfspController(BaseController):
     async def get_provider_value_by_code(self, code: str) -> DfspProviderValueSchema:
         """
         Get a provider value by code.
-        
+
         Args:
             code: The provider value code
-            
+
         Returns:
             DfspProviderValueSchema for the requested code
         """
@@ -167,10 +169,10 @@ class DfspController(BaseController):
     async def get_children(self, parent_id: int) -> List[DfspProviderValueSchema]:
         """
         Get direct children of a provider value.
-        
+
         Args:
             parent_id: Parent provider value ID
-            
+
         Returns:
             List of child provider values
         """
@@ -182,4 +184,3 @@ class DfspController(BaseController):
         except Exception as e:
             _logger.error(f"Error fetching children for {parent_id}: {str(e)}")
             raise
-

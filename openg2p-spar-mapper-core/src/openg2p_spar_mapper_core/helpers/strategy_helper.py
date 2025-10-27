@@ -4,7 +4,6 @@ from typing import List
 import orjson
 from openg2p_fastapi_auth.models.credentials import AuthCredentials
 from openg2p_fastapi_common.service import BaseService
-
 from openg2p_spar_models.models import LoginProvider, Strategy
 from openg2p_spar_models.schemas import (
     STRATEGY_ID_KEY,

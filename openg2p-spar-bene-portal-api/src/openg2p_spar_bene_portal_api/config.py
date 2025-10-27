@@ -24,5 +24,3 @@ class Settings(BaseSettings):
     db_hostname: str = "localhost"
     db_port: int = 5432
     db_dbname: str = "spardb"
-
-

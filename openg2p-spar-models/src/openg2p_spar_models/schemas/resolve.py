@@ -1,19 +1,22 @@
 from datetime import datetime
 from enum import Enum
 from typing import List, Optional
-from pydantic import BaseModel, ConfigDict
+
 from openg2p_fastapi_common.schemas import (
     G2PRequest,
     G2PRequestBody,
     G2PResponse,
     G2PResponseBody,
 )
+from pydantic import BaseModel, ConfigDict
 
 from .link import StatusEnum
+
 
 class ResolveScope(Enum):
     yes_no = "yes_no"
     details = "details"
+
 
 class ResolveStatusReasonCode(Enum):
     rjct_reference_id_invalid = "rjct.reference_id.invalid"
@@ -30,6 +33,7 @@ class ResolveStatusReasonCode(Enum):
     succ_id_inactive = "succ.id.inactive"
     succ_id_not_found = "succ.id.not_found"
 
+
 class SingleResolveRequest(BaseModel):
     reference_id: str
     timestamp: str
@@ -40,21 +44,26 @@ class SingleResolveRequest(BaseModel):
     additional_info: Optional[List[object]] = None
     locale: Optional[str] = "en"
 
+
 class ResolveRequestPayload(BaseModel):
     transaction_id: str
     resolve_request: List[SingleResolveRequest]
 
+
 class ResolveRequestBody(G2PRequestBody):
     request_payload: ResolveRequestPayload
 
+
 class ResolveRequest(G2PRequest):
     request_body: ResolveRequestBody
+
 
 class AccountProviderInfo(BaseModel):
     name: str
     code: str
     subcode: Optional[str]
     additional_info: Optional[List[object]] = None
+
 
 class SingleResolveResponse(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
@@ -70,13 +79,16 @@ class SingleResolveResponse(BaseModel):
     additional_info: Optional[List[object]] = None
     locale: Optional[str] = "en"
 
+
 class ResolveResponsePayload(BaseModel):
     transaction_id: Optional[str] = None
     correlation_id: Optional[str] = ""
     resolve_response: List[SingleResolveResponse]
 
+
 class ResolveResponseBody(G2PResponseBody):
     response_payload: ResolveResponsePayload
+
 
 class ResolveResponse(G2PResponse):
     response_body: ResolveResponseBody

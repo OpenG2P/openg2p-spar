@@ -1,8 +1,16 @@
-from openg2p_spar_models.schemas import StatusEnum, LinkStatusReasonCode, ResolveStatusReasonCode, UnlinkStatusReasonCode, UpdateStatusReasonCode
+from openg2p_spar_models.schemas import (
+    LinkStatusReasonCode,
+    ResolveStatusReasonCode,
+    StatusEnum,
+    UnlinkStatusReasonCode,
+    UpdateStatusReasonCode,
+)
 
 
 class LinkValidationException(Exception):
-    def __init__(self, message, status: StatusEnum, validation_error_type: LinkStatusReasonCode):
+    def __init__(
+        self, message, status: StatusEnum, validation_error_type: LinkStatusReasonCode
+    ):
         self.message = message
         super().__init__(self.message)
         self.status: StatusEnum = status
@@ -10,7 +18,9 @@ class LinkValidationException(Exception):
 
 
 class UpdateValidationException(Exception):
-    def __init__(self, message, status: StatusEnum, validation_error_type: UpdateStatusReasonCode):
+    def __init__(
+        self, message, status: StatusEnum, validation_error_type: UpdateStatusReasonCode
+    ):
         self.message = message
         super().__init__(self.message)
         self.status: StatusEnum = status
@@ -18,7 +28,12 @@ class UpdateValidationException(Exception):
 
 
 class ResolveValidationException(Exception):
-    def __init__(self, message, status: StatusEnum, validation_error_type: ResolveStatusReasonCode):
+    def __init__(
+        self,
+        message,
+        status: StatusEnum,
+        validation_error_type: ResolveStatusReasonCode,
+    ):
         self.message = message
         super().__init__(self.message)
         self.status: StatusEnum = status
@@ -26,7 +41,9 @@ class ResolveValidationException(Exception):
 
 
 class UnlinkValidationException(Exception):
-    def __init__(self, message, status: StatusEnum, validation_error_type: UnlinkStatusReasonCode):
+    def __init__(
+        self, message, status: StatusEnum, validation_error_type: UnlinkStatusReasonCode
+    ):
         self.message = message
         super().__init__(self.message)
         self.status: StatusEnum = status

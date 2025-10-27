@@ -10,6 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 class ProviderType(str, Enum):
     """Enum for DFSP provider types"""
+
     BANK = "BANK"
     EMAIL_WALLET = "EMAIL_WALLET"
     MOBILE_WALLET = "MOBILE_WALLET"
@@ -18,9 +19,9 @@ class ProviderType(str, Enum):
 class DfspProvider(BaseORMModelWithTimes):
     """
     DfspProvider model for top-level provider types.
-    
+
     Represents the main provider categories: BANK, EMAIL_WALLET, MOBILE_WALLET.
-    
+
     Attributes:
         code: Unique identifier (e.g., "BANK", "EMAIL_WALLET", "MOBILE_WALLET")
         name: Display name
@@ -28,9 +29,12 @@ class DfspProvider(BaseORMModelWithTimes):
         description: Optional description
         validation_regex: Optional regex pattern for validating codes
     """
+
     __tablename__ = "dfsp_provider"
 
-    code: Mapped[str] = mapped_column(String(50), nullable=False, unique=True, index=True)
+    code: Mapped[str] = mapped_column(
+        String(50), nullable=False, unique=True, index=True
+    )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     provider_type: Mapped[str] = mapped_column(
         String(50), nullable=False, unique=True, index=True
@@ -42,7 +46,7 @@ class DfspProvider(BaseORMModelWithTimes):
     async def get_all_providers(cls):
         """
         Get all providers.
-        
+
         Returns:
             List of DfspProvider objects
         """
@@ -58,10 +62,10 @@ class DfspProvider(BaseORMModelWithTimes):
     async def get_provider_by_type(cls, provider_type: str):
         """
         Get a provider by type.
-        
+
         Args:
             provider_type: The provider type (BANK, EMAIL_WALLET, MOBILE_WALLET)
-            
+
         Returns:
             DfspProvider object or None if not found
         """
@@ -77,10 +81,10 @@ class DfspProvider(BaseORMModelWithTimes):
     async def get_provider_by_code(cls, code: str):
         """
         Get a provider by code.
-        
+
         Args:
             code: The provider code
-            
+
         Returns:
             DfspProvider object or None if not found
         """
@@ -91,4 +95,3 @@ class DfspProvider(BaseORMModelWithTimes):
             return result.scalars().first()
         finally:
             await session.aclose()
-

@@ -1,19 +1,35 @@
 from datetime import datetime
-from openg2p_spar_models.schemas import (
-    LinkRequest, LinkResponse, SingleLinkResponse, StatusEnum,
-    LinkResponsePayload, LinkResponseBody,
-    UpdateRequest, UpdateResponse, SingleUpdateResponse,
-    UpdateResponsePayload, UpdateResponseBody,
-    ResolveRequest, ResolveResponse, SingleResolveResponse,
-    ResolveResponsePayload, ResolveResponseBody,
-    UnlinkRequest, UnlinkResponse, SingleUnlinkResponse,
-    UnlinkResponsePayload, UnlinkResponseBody
-)
-from ..exceptions import RequestValidationException
-from openg2p_fastapi_common.service import BaseService
+
 from openg2p_fastapi_common.schemas import (
-    G2PResponse, G2PResponseHeader, G2PResponseBody, G2PResponseStatus
+    G2PResponse,
+    G2PResponseBody,
+    G2PResponseHeader,
+    G2PResponseStatus,
 )
+from openg2p_fastapi_common.service import BaseService
+from openg2p_spar_models.schemas import (
+    LinkRequest,
+    LinkResponse,
+    LinkResponseBody,
+    LinkResponsePayload,
+    ResolveRequest,
+    ResolveResponse,
+    ResolveResponseBody,
+    ResolveResponsePayload,
+    SingleLinkResponse,
+    SingleResolveResponse,
+    SingleUnlinkResponse,
+    SingleUpdateResponse,
+    UnlinkRequest,
+    UnlinkResponse,
+    UnlinkResponseBody,
+    UnlinkResponsePayload,
+    UpdateRequest,
+    UpdateResponse,
+    UpdateResponseBody,
+    UpdateResponsePayload,
+)
+
 
 class ResponseHelper(BaseService):
     @staticmethod
@@ -35,12 +51,11 @@ class ResponseHelper(BaseService):
             response_status=G2PResponseStatus.SUCCESS,
             response_error_code=None,
             response_error_message=None,
-            response_timestamp=datetime.now()
+            response_timestamp=datetime.now(),
         )
 
         return LinkResponse(
-            response_header=response_header,
-            response_body=link_response_body
+            response_header=response_header, response_body=link_response_body
         )
 
     @staticmethod
@@ -54,7 +69,9 @@ class ResponseHelper(BaseService):
             correlation_id=None,
             update_response=single_update_responses,
         )
-        update_response_body = UpdateResponseBody(response_payload=update_response_payload)
+        update_response_body = UpdateResponseBody(
+            response_payload=update_response_payload
+        )
 
         # Create response header
         response_header = G2PResponseHeader(
@@ -62,12 +79,11 @@ class ResponseHelper(BaseService):
             response_status=G2PResponseStatus.SUCCESS,
             response_error_code=None,
             response_error_message=None,
-            response_timestamp=datetime.now()
+            response_timestamp=datetime.now(),
         )
 
         return UpdateResponse(
-            response_header=response_header,
-            response_body=update_response_body
+            response_header=response_header, response_body=update_response_body
         )
 
     @staticmethod
@@ -81,7 +97,9 @@ class ResponseHelper(BaseService):
             correlation_id=None,
             resolve_response=single_resolve_responses,
         )
-        resolve_response_body = ResolveResponseBody(response_payload=resolve_response_payload)
+        resolve_response_body = ResolveResponseBody(
+            response_payload=resolve_response_payload
+        )
 
         # Create response header
         response_header = G2PResponseHeader(
@@ -89,12 +107,11 @@ class ResponseHelper(BaseService):
             response_status=G2PResponseStatus.SUCCESS,
             response_error_code=None,
             response_error_message=None,
-            response_timestamp=datetime.now()
+            response_timestamp=datetime.now(),
         )
 
         return ResolveResponse(
-            response_header=response_header,
-            response_body=resolve_response_body
+            response_header=response_header, response_body=resolve_response_body
         )
 
     @staticmethod
@@ -108,7 +125,9 @@ class ResponseHelper(BaseService):
             correlation_id=None,
             unlink_response=single_unlink_responses,
         )
-        unlink_response_body = UnlinkResponseBody(response_payload=unlink_response_payload)
+        unlink_response_body = UnlinkResponseBody(
+            response_payload=unlink_response_payload
+        )
 
         # Create response header
         response_header = G2PResponseHeader(
@@ -116,40 +135,46 @@ class ResponseHelper(BaseService):
             response_status=G2PResponseStatus.SUCCESS,
             response_error_code=None,
             response_error_message=None,
-            response_timestamp=datetime.now()
+            response_timestamp=datetime.now(),
         )
 
         return UnlinkResponse(
-            response_header=response_header,
-            response_body=unlink_response_body
+            response_header=response_header, response_body=unlink_response_body
         )
 
     @staticmethod
-    def construct_error_response(request, exception: Exception, error_code: str = None, error_message: str = None) -> G2PResponse:
+    def construct_error_response(
+        request, exception: Exception, error_code: str = None, error_message: str = None
+    ) -> G2PResponse:
         """
         Construct a G2PResponse error response following the G2PResponse schema
         """
         # Extract request_id from request header if available
-        request_id = getattr(request.request_header, 'request_id', 'unknown') if hasattr(request, 'request_header') else 'unknown'
-        
+        request_id = (
+            getattr(request.request_header, "request_id", "unknown")
+            if hasattr(request, "request_header")
+            else "unknown"
+        )
+
         # Use provided error details or extract from exception
-        final_error_code = error_code or getattr(exception, 'validation_error_type', 'rjct.internal.error')
-        final_error_message = error_message or getattr(exception, 'message', str(exception))
-        
+        final_error_code = error_code or getattr(
+            exception, "validation_error_type", "rjct.internal.error"
+        )
+        final_error_message = error_message or getattr(
+            exception, "message", str(exception)
+        )
+
         # Create response header with error status
         response_header = G2PResponseHeader(
             request_id=request_id,
             response_status=G2PResponseStatus.ERROR,
             response_error_code=final_error_code,
             response_error_message=final_error_message,
-            response_timestamp=datetime.now()
+            response_timestamp=datetime.now(),
         )
-        
+
         # Create response body with null payload
         response_body = G2PResponseBody(response_payload=None)
-        
+
         # Return G2PResponse
-        return G2PResponse(
-            response_header=response_header,
-            response_body=response_body
-        )
+        return G2PResponse(response_header=response_header, response_body=response_body)

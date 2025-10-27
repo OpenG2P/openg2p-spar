@@ -1,1 +1,7 @@
-from .exceptions import RequestValidationException, LinkValidationException, UpdateValidationException, ResolveValidationException, UnlinkValidationException
+from .exceptions import (
+    LinkValidationException,
+    RequestValidationException,
+    ResolveValidationException,
+    UnlinkValidationException,
+    UpdateValidationException,
+)

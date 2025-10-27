@@ -1,24 +1,33 @@
 import logging
+from typing import Annotated
 
 from fastapi import Depends
-from typing import Annotated
-from openg2p_fastapi_common.controller import BaseController
-from openg2p_fastapi_auth.dependencies import AuthCredentials
 from openg2p_fastapi_auth.auth import AuthFactory
-from openg2p_spar_models.schemas import (
-    LinkRequest, LinkResponse,
-    ResolveRequest, ResolveResponse,
-    UnlinkRequest, UnlinkResponse,
-    UpdateRequest, UpdateResponse
-)
-from openg2p_spar_mapper_core.services import MapperService, ResponseHelper, RequestValidation
+from openg2p_fastapi_auth.dependencies import AuthCredentials
+from openg2p_fastapi_common.controller import BaseController
 from openg2p_spar_mapper_core.exceptions import (
     LinkValidationException,
+    RequestValidationException,
     ResolveValidationException,
     UnlinkValidationException,
     UpdateValidationException,
-    RequestValidationException
 )
+from openg2p_spar_mapper_core.services import (
+    MapperService,
+    RequestValidation,
+    ResponseHelper,
+)
+from openg2p_spar_models.schemas import (
+    LinkRequest,
+    LinkResponse,
+    ResolveRequest,
+    ResolveResponse,
+    UnlinkRequest,
+    UnlinkResponse,
+    UpdateRequest,
+    UpdateResponse,
+)
+
 from ..config import Settings
 
 _config = Settings.get_config()
@@ -61,7 +70,7 @@ class MapperController(BaseController):
     async def link(
         self,
         link_request: LinkRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)]
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
     ) -> LinkResponse:
         """
         Link ID to Financial Address
@@ -74,8 +83,10 @@ class MapperController(BaseController):
             single_link_responses = await self.service.link(link_request)
             _logger.debug(f"Single Link Responses: {single_link_responses}")
             # Construct response
-            link_response: LinkResponse = ResponseHelper.get_component().construct_link_response(
-                link_request, single_link_responses
+            link_response: LinkResponse = (
+                ResponseHelper.get_component().construct_link_response(
+                    link_request, single_link_responses
+                )
             )
             return link_response
 
@@ -92,11 +103,11 @@ class MapperController(BaseController):
             return ResponseHelper.get_component().construct_error_response(
                 link_request, e, "rjct.internal.error", "Internal server error"
             )
-       
+
     async def resolve(
         self,
         resolve_request: ResolveRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)]
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
     ) -> ResolveResponse:
         """
         Resolve ID to Financial Address
@@ -109,8 +120,10 @@ class MapperController(BaseController):
             single_resolve_responses = await self.service.resolve(resolve_request)
 
             # Construct response
-            resolve_response: ResolveResponse = ResponseHelper.get_component().construct_resolve_response(
-                resolve_request, single_resolve_responses
+            resolve_response: ResolveResponse = (
+                ResponseHelper.get_component().construct_resolve_response(
+                    resolve_request, single_resolve_responses
+                )
             )
             return resolve_response
 
@@ -131,7 +144,7 @@ class MapperController(BaseController):
     async def unlink(
         self,
         unlink_request: UnlinkRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)]
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
     ) -> UnlinkResponse:
         """
         Unlink ID from Financial Address
@@ -144,8 +157,10 @@ class MapperController(BaseController):
             single_unlink_responses = await self.service.unlink(unlink_request)
 
             # Construct response
-            unlink_response: UnlinkResponse = ResponseHelper.get_component().construct_unlink_response(
-                unlink_request, single_unlink_responses
+            unlink_response: UnlinkResponse = (
+                ResponseHelper.get_component().construct_unlink_response(
+                    unlink_request, single_unlink_responses
+                )
             )
             return unlink_response
 
@@ -166,7 +181,7 @@ class MapperController(BaseController):
     async def update(
         self,
         update_request: UpdateRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)]
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
     ) -> UpdateResponse:
         """
         Update ID to Financial Address mapping
@@ -179,8 +194,10 @@ class MapperController(BaseController):
             single_update_responses = await self.service.update(update_request)
 
             # Construct response
-            update_response: UpdateResponse = ResponseHelper.get_component().construct_update_response(
-                update_request, single_update_responses
+            update_response: UpdateResponse = (
+                ResponseHelper.get_component().construct_update_response(
+                    update_request, single_update_responses
+                )
             )
             return update_response
 

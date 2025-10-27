@@ -1,70 +1,70 @@
+from enum import Enum
 
+from .dfsp import (
+    DfspProviderCreateSchema,
+    DfspProviderSchema,
+    DfspProviderUpdateSchema,
+    DfspProviderValueCreateSchema,
+    DfspProviderValueSchema,
+    DfspProviderValueUpdateSchema,
+    ProviderTypeEnum,
+)
 from .link import (
-    StatusEnum,
+    LinkRequest,
+    LinkRequestBody,
+    LinkRequestPayload,
+    LinkResponse,
+    LinkResponseBody,
+    LinkResponsePayload,
     LinkStatusReasonCode,
     SingleLinkRequest,
-    LinkRequestPayload,
-    LinkRequestBody,
     SingleLinkResponse,
-    LinkResponsePayload,
-    LinkResponseBody,
-    LinkRequest,
-    LinkResponse,
+    StatusEnum,
 )
 from .resolve import (
+    AccountProviderInfo,
+    ResolveRequest,
+    ResolveRequestBody,
+    ResolveRequestPayload,
+    ResolveResponse,
+    ResolveResponseBody,
+    ResolveResponsePayload,
     ResolveScope,
     ResolveStatusReasonCode,
     SingleResolveRequest,
-    ResolveRequestPayload,
-    ResolveRequestBody,
-    AccountProviderInfo,
     SingleResolveResponse,
-    ResolveResponsePayload,
-    ResolveResponseBody,
-    ResolveRequest,
-    ResolveResponse,
-)
-from .unlink import (
-    UnlinkStatusReasonCode,
-    SingleUnlinkRequest,
-    UnlinkRequestPayload,
-    UnlinkRequestBody,
-    SingleUnlinkResponse,
-    UnlinkResponsePayload,
-    UnlinkResponseBody,
-    UnlinkRequest,
-    UnlinkResponse,
-)
-from .update import (
-    UpdateStatusReasonCode,
-    SingleUpdateRequest,
-    UpdateRequestPayload,
-    UpdateRequestBody,
-    SingleUpdateResponse,
-    UpdateResponsePayload,
-    UpdateResponseBody,
-    UpdateRequest,
-    UpdateResponse,
 )
 from .strategy import (
-    StrategyTypeEnum,
-    StrategySchema,
-    StrategyCreateSchema,
-    StrategyUpdateSchema,
-    KeyValuePair,
-    Fa,
     STRATEGY_ID_KEY,
+    Fa,
+    KeyValuePair,
+    StrategyCreateSchema,
+    StrategySchema,
+    StrategyTypeEnum,
+    StrategyUpdateSchema,
 )
-from .dfsp import (
-    ProviderTypeEnum,
-    DfspProviderSchema,
-    DfspProviderCreateSchema,
-    DfspProviderUpdateSchema,
-    DfspProviderValueSchema,
-    DfspProviderValueCreateSchema,
-    DfspProviderValueUpdateSchema,
+from .unlink import (
+    SingleUnlinkRequest,
+    SingleUnlinkResponse,
+    UnlinkRequest,
+    UnlinkRequestBody,
+    UnlinkRequestPayload,
+    UnlinkResponse,
+    UnlinkResponseBody,
+    UnlinkResponsePayload,
+    UnlinkStatusReasonCode,
 )
-from enum import Enum
+from .update import (
+    SingleUpdateRequest,
+    SingleUpdateResponse,
+    UpdateRequest,
+    UpdateRequestBody,
+    UpdateRequestPayload,
+    UpdateResponse,
+    UpdateResponseBody,
+    UpdateResponsePayload,
+    UpdateStatusReasonCode,
+)
 
 
 class StatusReasonCodeEnum(Enum):
@@ -73,4 +73,3 @@ class StatusReasonCodeEnum(Enum):
     rjct_signature_invalid = "rjct.signature.invalid"
     rjct_permission_denied = "rjct.permission.denied"
     rjct_internal_error = "rjct.internal.error"
-
