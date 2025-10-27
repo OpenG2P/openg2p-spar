@@ -26,9 +26,9 @@ jobs:
           python-version: "3.10"
       - name: Install dependencies
         run: |
-          python -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=/openg2p-fastapi-models
-          python -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=/openg2p-fastapi-auth
-          python -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=/openg2p-fastapi-common
+          python -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=openg2p-fastapi-auth-models
+          python -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=openg2p-fastapi-auth
+          python -m pip install git+https://github.com/openg2p/openg2p-fastapi-common@1.1\#subdirectory=openg2p-fastapi-common
       - name: Install local models and core lib
         run: |
           cd ../openg2p-spar-models && pip install -e . --quiet && cd ../openg2p-spar-bene-portal-api
