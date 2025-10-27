@@ -16,9 +16,7 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 dependencies = [
-    "openg2p-fastapi-common~=1.1.2",
-    "openg2p-g2pconnect-common-lib",
-    "openg2p-g2pconnect-mapper-lib",
+    "openg2p-fastapi-common",
     "gunicorn ~=22.0.0",
     "asyncpg",
     "psycopg2"
