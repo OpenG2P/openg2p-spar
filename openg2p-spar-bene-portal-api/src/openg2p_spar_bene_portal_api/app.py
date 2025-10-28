@@ -14,6 +14,7 @@ from openg2p_spar_mapper_core.services import (
     RequestValidation,
     ResponseHelper,
 )
+from openg2p_spar_mapper_core.helpers import StrategyHelper
 from openg2p_spar_models.models import (
     DfspProvider,
     DfspProviderValue,
@@ -34,6 +35,7 @@ class Initializer(BaseInitializer):
         RequestValidation()
         MapperService()
         ResponseHelper()
+        StrategyHelper()
         DfspService()
 
         MapperController().post_init()

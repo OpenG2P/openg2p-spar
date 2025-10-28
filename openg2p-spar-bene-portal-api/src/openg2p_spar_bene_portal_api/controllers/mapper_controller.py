@@ -12,6 +12,7 @@ from openg2p_spar_mapper_core.exceptions import (
     UnlinkValidationException,
     UpdateValidationException,
 )
+from openg2p_spar_mapper_core.helpers.strategy_helper import StrategyHelper
 from openg2p_spar_mapper_core.services import (
     MapperService,
     RequestValidation,
@@ -79,6 +80,15 @@ class MapperController(BaseController):
             # Validate request structure
             RequestValidation.get_component().validate_request(link_request)
 
+            # Construct ID from auth credentials
+            constructed_id = await StrategyHelper().get_component().construct_id(
+                auth_credentials
+            )
+
+            # Replace ID with constructed ID from auth for each request
+            for single_link_request in link_request.request_body.request_payload.link_request:
+                single_link_request.id = constructed_id
+
             # Process link request
             single_link_responses = await self.service.link(link_request)
             _logger.debug(f"Single Link Responses: {single_link_responses}")
@@ -115,6 +125,16 @@ class MapperController(BaseController):
         try:
             # Validate request structure
             RequestValidation.get_component().validate_request(resolve_request)
+
+            # Construct ID from auth credentials
+            constructed_id = await StrategyHelper().get_component().construct_id(
+                auth_credentials
+            )
+
+            # Replace ID with constructed ID from auth for each request
+            for single_resolve_request in resolve_request.request_body.request_payload.resolve_request:
+                if not single_resolve_request.id:
+                    single_resolve_request.id = constructed_id
 
             # Process resolve request
             single_resolve_responses = await self.service.resolve(resolve_request)
@@ -153,6 +173,15 @@ class MapperController(BaseController):
             # Validate request structure
             RequestValidation.get_component().validate_request(unlink_request)
 
+            # Construct ID from auth credentials
+            constructed_id = await StrategyHelper().get_component().construct_id(
+                auth_credentials
+            )
+
+            # Replace ID with constructed ID from auth for each request
+            for single_unlink_request in unlink_request.request_body.request_payload.unlink_request:
+                single_unlink_request.id = constructed_id
+
             # Process unlink request
             single_unlink_responses = await self.service.unlink(unlink_request)
 
@@ -189,6 +218,15 @@ class MapperController(BaseController):
         try:
             # Validate request structure
             RequestValidation.get_component().validate_request(update_request)
+
+            # Construct ID from auth credentials
+            constructed_id = await StrategyHelper().get_component().construct_id(
+                auth_credentials
+            )
+
+            # Replace ID with constructed ID from auth for each request
+            for single_update_request in update_request.request_body.request_payload.update_request:
+                single_update_request.id = constructed_id
 
             # Process update request
             single_update_responses = await self.service.update(update_request)
