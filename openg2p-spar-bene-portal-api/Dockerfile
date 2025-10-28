@@ -10,15 +10,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy project files
-COPY . .
+# Copy all local packages
+COPY openg2p-spar-models /build/openg2p-spar-models
+COPY openg2p-spar-mapper-core /build/openg2p-spar-mapper-core
+COPY openg2p-spar-bene-portal-api /build/openg2p-spar-bene-portal-api
 
-# Install Python dependencies
+# Install Python dependencies from git and local packages
 RUN python -m pip install --upgrade pip setuptools wheel && \
     python -m pip install --no-cache-dir \
     git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-auth-models \
     git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-auth \
-    git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-common
+    git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-common && \
+    python -m pip install --no-cache-dir -e /build/openg2p-spar-models && \
+    python -m pip install --no-cache-dir -e /build/openg2p-spar-mapper-core && \
+    python -m pip install --no-cache-dir -e /build/openg2p-spar-bene-portal-api
 
 # Production stage
 FROM python:3.11-slim
@@ -44,17 +49,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy all packages from repository (build context is repository root)
-COPY --chown=${container_user}:${container_user_group} openg2p-spar-models /app/openg2p-spar-models
-COPY --chown=${container_user}:${container_user_group} openg2p-spar-mapper-core /app/openg2p-spar-mapper-core
+# Copy application code from bene-portal-api
 COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/src /app/src
 COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/main.py /app/main.py
 COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/pyproject.toml /app/pyproject.toml
+COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/README.md /app/README.md
 
-# Install local packages (models and mapper-core first, then bene-portal-api)
-RUN python -m pip install --no-cache-dir -e /app/openg2p-spar-models && \
-    python -m pip install --no-cache-dir -e /app/openg2p-spar-mapper-core && \
-    python -m pip install --no-cache-dir -e /app
+# Install bene-portal-api package
+# Note: openg2p-spar-mapper-core and openg2p-spar-models are already installed
+# from the builder stage via git dependencies
+RUN python -m pip install --no-cache-dir -e /app
 
 # Set ownership
 RUN chown -R ${container_user}:${container_user_group} /app
