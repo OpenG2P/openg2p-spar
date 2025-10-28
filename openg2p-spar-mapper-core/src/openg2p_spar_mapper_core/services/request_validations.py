@@ -1,5 +1,5 @@
-from typing import Union
 import logging
+from typing import Union
 
 from openg2p_fastapi_common.service import BaseService
 from openg2p_spar_models.schemas import (
@@ -10,17 +10,18 @@ from openg2p_spar_models.schemas import (
     UpdateRequest,
 )
 
-from ..exceptions import RequestValidationException
 from ..config import Settings
+from ..exceptions import RequestValidationException
 
 _config = Settings.get_config()
 _logger = logging.getLogger(_config.logging_default_logger_name)
+
 
 class RequestValidation(BaseService):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         print("RequestValidation initialized")
-    
+
     def validate_signature(self, is_signature_valid) -> None:
         _logger.info("Validating signature")
         if not is_signature_valid:
