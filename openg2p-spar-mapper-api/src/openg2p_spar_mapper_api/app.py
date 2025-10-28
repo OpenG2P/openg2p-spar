@@ -13,6 +13,9 @@ from openg2p_spar_mapper_core.services import (
     RequestValidation,
     ResponseHelper,
 )
+from openg2p_fastapi_partner_auth.jwt_validation_helper import JWTValidationHelper
+from openg2p_fastapi_common.utils.crypto import KeymanagerCryptoHelper
+
 from openg2p_spar_models.models import (
     IdFaMapping,
 )
@@ -30,6 +33,8 @@ class Initializer(BaseInitializer):
         RequestValidation()
         MapperService()
         ResponseHelper()
+        JWTValidationHelper()
+        KeymanagerCryptoHelper()
 
         MapperController().post_init()
 

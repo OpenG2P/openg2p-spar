@@ -2,9 +2,8 @@ import logging
 from typing import Annotated
 
 from fastapi import Depends
-from openg2p_fastapi_auth.auth import AuthFactory
-from openg2p_fastapi_auth.dependencies import AuthCredentials
 from openg2p_fastapi_common.controller import BaseController
+from openg2p_fastapi_partner_auth.jwt_signature_validator import JWTSignatureValidator
 from openg2p_spar_mapper_core.exceptions import (
     LinkValidationException,
     RequestValidationException,
@@ -70,12 +69,14 @@ class MapperController(BaseController):
     async def link(
         self,
         link_request: LinkRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ) -> LinkResponse:
         """
         Link ID to Financial Address
         """
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+
             # Validate request structure
             RequestValidation.get_component().validate_request(link_request)
 
@@ -107,12 +108,14 @@ class MapperController(BaseController):
     async def resolve(
         self,
         resolve_request: ResolveRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ) -> ResolveResponse:
         """
         Resolve ID to Financial Address
         """
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+
             # Validate request structure
             RequestValidation.get_component().validate_request(resolve_request)
 
@@ -144,12 +147,14 @@ class MapperController(BaseController):
     async def unlink(
         self,
         unlink_request: UnlinkRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ) -> UnlinkResponse:
         """
         Unlink ID from Financial Address
         """
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+
             # Validate request structure
             RequestValidation.get_component().validate_request(unlink_request)
 
@@ -181,12 +186,14 @@ class MapperController(BaseController):
     async def update(
         self,
         update_request: UpdateRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        is_signature_valid: Annotated[bool, Depends(JWTSignatureValidator())],
     ) -> UpdateResponse:
         """
         Update ID to Financial Address mapping
         """
         try:
+            RequestValidation.get_component().validate_signature(is_signature_valid)
+
             # Validate request structure
             RequestValidation.get_component().validate_request(update_request)
 

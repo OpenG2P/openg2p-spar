@@ -1,4 +1,5 @@
 from typing import Union
+import logging
 
 from openg2p_fastapi_common.service import BaseService
 from openg2p_spar_models.schemas import (
@@ -10,12 +11,27 @@ from openg2p_spar_models.schemas import (
 )
 
 from ..exceptions import RequestValidationException
+from ..config import Settings
 
+_config = Settings.get_config()
+_logger = logging.getLogger(_config.logging_default_logger_name)
 
 class RequestValidation(BaseService):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         print("RequestValidation initialized")
+    
+    def validate_signature(self, is_signature_valid) -> None:
+        _logger.info("Validating signature")
+        if not is_signature_valid:
+            _logger.error("Invalid JWT signature")
+            raise RequestValidationException(
+                code=StatusReasonCodeEnum.rjct_jwt_invalid,
+                message=StatusReasonCodeEnum.rjct_jwt_invalid,
+            )
+
+        _logger.info("Signature validated successfully")
+        return None
 
     def validate_request(
         self, request: Union[LinkRequest, UpdateRequest, ResolveRequest, UnlinkRequest]
