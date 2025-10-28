@@ -2,8 +2,8 @@ import re
 from typing import List
 
 import orjson
-from openg2p_fastapi_auth_models.schemas import AuthCredentials
 from openg2p_fastapi_auth_models.models import LoginProvider
+from openg2p_fastapi_auth_models.schemas import AuthCredentials
 from openg2p_fastapi_common.service import BaseService
 from openg2p_spar_models.models import Strategy
 from openg2p_spar_models.schemas import (

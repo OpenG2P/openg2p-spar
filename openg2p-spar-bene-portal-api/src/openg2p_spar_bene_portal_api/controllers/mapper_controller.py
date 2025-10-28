@@ -12,11 +12,8 @@ from openg2p_spar_mapper_core.exceptions import (
     UnlinkValidationException,
     UpdateValidationException,
 )
-from openg2p_spar_mapper_core.helpers import StrategyHelper, ResponseHelper
-from openg2p_spar_mapper_core.services import (
-    MapperService,
-    RequestValidation
-)
+from openg2p_spar_mapper_core.helpers import ResponseHelper, StrategyHelper
+from openg2p_spar_mapper_core.services import MapperService, RequestValidation
 from openg2p_spar_models.schemas import (
     LinkRequest,
     LinkResponse,
@@ -80,12 +77,14 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(link_request)
 
             # Construct ID from auth credentials
-            constructed_id = await StrategyHelper().get_component().construct_id(
-                auth_credentials
+            constructed_id = (
+                await StrategyHelper().get_component().construct_id(auth_credentials)
             )
 
             # Replace ID with constructed ID from auth for each request
-            for single_link_request in link_request.request_body.request_payload.link_request:
+            for (
+                single_link_request
+            ) in link_request.request_body.request_payload.link_request:
                 single_link_request.id = constructed_id
 
             # Process link request
@@ -126,12 +125,14 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(resolve_request)
 
             # Construct ID from auth credentials
-            constructed_id = await StrategyHelper().get_component().construct_id(
-                auth_credentials
+            constructed_id = (
+                await StrategyHelper().get_component().construct_id(auth_credentials)
             )
 
             # Replace ID with constructed ID from auth for each request
-            for single_resolve_request in resolve_request.request_body.request_payload.resolve_request:
+            for (
+                single_resolve_request
+            ) in resolve_request.request_body.request_payload.resolve_request:
                 if not single_resolve_request.id:
                     single_resolve_request.id = constructed_id
 
@@ -173,12 +174,14 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(unlink_request)
 
             # Construct ID from auth credentials
-            constructed_id = await StrategyHelper().get_component().construct_id(
-                auth_credentials
+            constructed_id = (
+                await StrategyHelper().get_component().construct_id(auth_credentials)
             )
 
             # Replace ID with constructed ID from auth for each request
-            for single_unlink_request in unlink_request.request_body.request_payload.unlink_request:
+            for (
+                single_unlink_request
+            ) in unlink_request.request_body.request_payload.unlink_request:
                 single_unlink_request.id = constructed_id
 
             # Process unlink request
@@ -219,12 +222,14 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(update_request)
 
             # Construct ID from auth credentials
-            constructed_id = await StrategyHelper().get_component().construct_id(
-                auth_credentials
+            constructed_id = (
+                await StrategyHelper().get_component().construct_id(auth_credentials)
             )
 
             # Replace ID with constructed ID from auth for each request
-            for single_update_request in update_request.request_body.request_payload.update_request:
+            for (
+                single_update_request
+            ) in update_request.request_body.request_payload.update_request:
                 single_update_request.id = constructed_id
 
             # Process update request
