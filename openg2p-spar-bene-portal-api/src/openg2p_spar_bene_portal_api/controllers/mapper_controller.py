@@ -15,6 +15,8 @@ from openg2p_spar_mapper_core.exceptions import (
 from openg2p_spar_mapper_core.helpers import ResponseHelper, StrategyHelper
 from openg2p_spar_mapper_core.services import MapperService, RequestValidation
 from openg2p_spar_models.schemas import (
+    STRATEGY_ID_KEY,
+    Fa,
     LinkRequest,
     LinkResponse,
     ResolveRequest,
@@ -82,10 +84,45 @@ class MapperController(BaseController):
             )
 
             # Replace ID with constructed ID from auth for each request
+            # Also construct FA and add additional_info for each request
             for (
                 single_link_request
             ) in link_request.request_body.request_payload.link_request:
                 single_link_request.id = constructed_id
+
+                # Construct FA from the request FA
+                if single_link_request.fa:
+                    # Parse FA string to extract strategy_id from additional_info if available
+                    strategy_id = None
+                    if single_link_request.additional_info:
+                        strategy_id = single_link_request.additional_info[0].get(
+                            STRATEGY_ID_KEY
+                        )
+
+                    if strategy_id:
+                        # Create Fa object with strategy_id
+                        fa_obj = Fa(strategy_id=strategy_id)
+                        constructed_fa = (
+                            await StrategyHelper()
+                            .get_component()
+                            .construct_fa(fa_obj)
+                        )
+                        single_link_request.fa = constructed_fa
+
+                    # Ensure additional_info contains strategy_id
+                    if not single_link_request.additional_info:
+                        single_link_request.additional_info = []
+
+                    if (
+                        not single_link_request.additional_info
+                        or STRATEGY_ID_KEY not in single_link_request.additional_info[0]
+                    ):
+                        if not single_link_request.additional_info:
+                            single_link_request.additional_info = [{}]
+                        if STRATEGY_ID_KEY not in single_link_request.additional_info[0]:
+                            single_link_request.additional_info[0][
+                                STRATEGY_ID_KEY
+                            ] = strategy_id
 
             # Process link request
             single_link_responses = await self.service.link(link_request)
@@ -141,7 +178,7 @@ class MapperController(BaseController):
 
             # Construct response
             resolve_response: ResolveResponse = (
-                await ResponseHelper.get_component().construct_resolve_response(
+                ResponseHelper.get_component().construct_resolve_response(
                     resolve_request, single_resolve_responses
                 )
             )

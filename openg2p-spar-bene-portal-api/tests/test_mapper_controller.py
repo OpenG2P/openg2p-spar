@@ -25,6 +25,7 @@ async def test_link_endpoint():
     mock_single_link_request = MagicMock()
     mock_single_link_request.id = "original_id"
     mock_single_link_request.fa = "test_fa"
+    mock_single_link_request.additional_info = [{"strategy_id": 1}]
     mock_request.request_body.request_payload.link_request = [mock_single_link_request]
 
     # Mock all dependencies before creating controller
@@ -52,6 +53,9 @@ async def test_link_endpoint():
         mock_strategy_helper_instance.construct_id = AsyncMock(
             return_value="constructed_id_123"
         )
+        mock_strategy_helper_instance.construct_fa = AsyncMock(
+            return_value="constructed_fa_123"
+        )
         mock_strategy_helper.return_value.get_component.return_value = (
             mock_strategy_helper_instance
         )
@@ -70,6 +74,10 @@ async def test_link_endpoint():
 
         # Verify ID was replaced with constructed ID
         assert mock_single_link_request.id == "constructed_id_123"
+        # Verify FA was constructed
+        assert mock_single_link_request.fa == "constructed_fa_123"
+        # Verify additional_info contains strategy_id
+        assert mock_single_link_request.additional_info[0]["strategy_id"] == 1
         assert result is not None
         mock_service_instance.link.assert_called_once()
 

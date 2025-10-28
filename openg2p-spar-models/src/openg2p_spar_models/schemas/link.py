@@ -31,7 +31,7 @@ class LinkStatusReasonCode(Enum):
 class SingleLinkRequest(BaseModel):
     reference_id: str
     timestamp: str
-    id: str
+    id: Optional[str] = None
     fa: str
     name: Optional[str] = None
     phone_number: Optional[str] = None
