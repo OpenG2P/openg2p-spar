@@ -53,7 +53,9 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/src /app/src
 COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/main.py /app/main.py
 COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/pyproject.toml /app/pyproject.toml
-COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/README.md /app/README.md
+
+# Create a minimal README.md if it doesn't exist (required by pyproject.toml)
+RUN if [ ! -f /app/README.md ]; then echo "# OpenG2P SPAR Bene Portal API" > /app/README.md; fi
 
 # Install bene-portal-api package
 # Note: openg2p-spar-mapper-core and openg2p-spar-models are already installed
