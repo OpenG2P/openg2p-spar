@@ -1,5 +1,5 @@
 # Multi-stage build for OpenG2P SPAR Bene Portal API
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /build
 
@@ -7,6 +7,7 @@ WORKDIR /build
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy project files
@@ -65,9 +66,4 @@ ENV SPAR_BENE_PORTAL_NO_OF_WORKERS=4
 
 
 # Run application
-CMD gunicorn "main:app" \
-    --workers ${SPAR_BENE_PORTAL_NO_OF_WORKERS} \
-    --worker-class uvicorn.workers.UvicornWorker \
-    --bind ${SPAR_BENE_PORTAL_HOST}:${SPAR_BENE_PORTAL_PORT} \
-    --access-logfile - \
-    --error-logfile -
+CMD ["sh", "-c", "gunicorn main:app --workers ${SPAR_BENE_PORTAL_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_BENE_PORTAL_HOST}:${SPAR_BENE_PORTAL_PORT} --access-logfile - --error-logfile -"]
