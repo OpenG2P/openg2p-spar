@@ -10,11 +10,9 @@ from openg2p_spar_models.schemas import (
     UpdateRequest,
 )
 
-from ..config import Settings
 from ..exceptions import RequestValidationException
 
-_config = Settings.get_config()
-_logger = logging.getLogger(_config.logging_default_logger_name)
+_logger = logging.getLogger("request_validation")
 
 
 class RequestValidation(BaseService):
