@@ -18,9 +18,7 @@ RUN python -m pip install --upgrade pip setuptools wheel && \
     python -m pip install --no-cache-dir \
     git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-auth-models \
     git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-auth \
-    git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-common \
-    /build/openg2p-spar-models \
-    /build/openg2p-spar-mapper-core
+    git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-common
 
 # Production stage
 FROM python:3.11-slim
@@ -46,12 +44,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code
-COPY --chown=${container_user}:${container_user_group} . /app/src
-COPY --chown=${container_user}:${container_user_group} main.py /app
+# Copy all packages from repository
+COPY --chown=${container_user}:${container_user_group} openg2p-spar-models /app/openg2p-spar-models
+COPY --chown=${container_user}:${container_user_group} openg2p-spar-mapper-core /app/openg2p-spar-mapper-core
+COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api /app/src
+COPY --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api/main.py /app
 
-# Install local packages
-RUN cd /app/src && python -m pip install --no-cache-dir -e .
+# Install local packages (models and mapper-core first, then bene-portal-api)
+RUN python -m pip install --no-cache-dir -e /app/openg2p-spar-models && \
+    python -m pip install --no-cache-dir -e /app/openg2p-spar-mapper-core && \
+    python -m pip install --no-cache-dir -e /app/src
 
 # Set ownership
 RUN chown -R ${container_user}:${container_user_group} /app
