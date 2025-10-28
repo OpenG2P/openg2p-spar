@@ -42,11 +42,13 @@ from .strategy import (
     FaUnion,
     KeyValuePair,
     MobileWalletFa,
-    ProviderTypeEnum as StrategyProviderTypeEnum,
     StrategyCreateSchema,
     StrategySchema,
     StrategyTypeEnum,
     StrategyUpdateSchema,
+)
+from .strategy import (
+    ProviderTypeEnum as StrategyProviderTypeEnum,
 )
 from .unlink import (
     SingleUnlinkRequest,

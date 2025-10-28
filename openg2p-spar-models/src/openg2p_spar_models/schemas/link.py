@@ -10,7 +10,7 @@ from openg2p_fastapi_common.schemas import (
 )
 from pydantic import BaseModel, ConfigDict
 
-from .strategy import BankAccountFa, EmailWalletFa, FaUnion, MobileWalletFa
+from .strategy import FaUnion
 
 
 class StatusEnum(Enum):

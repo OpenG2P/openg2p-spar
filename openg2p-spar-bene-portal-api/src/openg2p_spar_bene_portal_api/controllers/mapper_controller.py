@@ -113,7 +113,9 @@ class MapperController(BaseController):
                     ):
                         if not single_link_request.additional_info:
                             single_link_request.additional_info = [{}]
-                        single_link_request.additional_info[0][STRATEGY_ID_KEY] = strategy_id
+                        single_link_request.additional_info[0][
+                            STRATEGY_ID_KEY
+                        ] = strategy_id
 
             # Process link request
             single_link_responses = await self.service.link(link_request)
@@ -281,11 +283,14 @@ class MapperController(BaseController):
 
                     if (
                         not single_update_request.additional_info
-                        or STRATEGY_ID_KEY not in single_update_request.additional_info[0]
+                        or STRATEGY_ID_KEY
+                        not in single_update_request.additional_info[0]
                     ):
                         if not single_update_request.additional_info:
                             single_update_request.additional_info = [{}]
-                        single_update_request.additional_info[0][STRATEGY_ID_KEY] = strategy_id
+                        single_update_request.additional_info[0][
+                            STRATEGY_ID_KEY
+                        ] = strategy_id
 
             # Process update request
             single_update_responses = await self.service.update(update_request)

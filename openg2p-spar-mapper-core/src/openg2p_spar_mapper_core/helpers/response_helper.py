@@ -206,7 +206,9 @@ class ResponseHelper(BaseService):
         )
         link_response_body = LinkResponseBody(response_payload=link_response_payload)
 
-        return LinkResponse(response_header=response_header, response_body=link_response_body)
+        return LinkResponse(
+            response_header=response_header, response_body=link_response_body
+        )
 
     @staticmethod
     def construct_resolve_error_response(
@@ -241,9 +243,13 @@ class ResponseHelper(BaseService):
             correlation_id=None,
             resolve_response=[],
         )
-        resolve_response_body = ResolveResponseBody(response_payload=resolve_response_payload)
+        resolve_response_body = ResolveResponseBody(
+            response_payload=resolve_response_payload
+        )
 
-        return ResolveResponse(response_header=response_header, response_body=resolve_response_body)
+        return ResolveResponse(
+            response_header=response_header, response_body=resolve_response_body
+        )
 
     @staticmethod
     def construct_update_error_response(
@@ -278,9 +284,13 @@ class ResponseHelper(BaseService):
             correlation_id=None,
             update_response=[],
         )
-        update_response_body = UpdateResponseBody(response_payload=update_response_payload)
+        update_response_body = UpdateResponseBody(
+            response_payload=update_response_payload
+        )
 
-        return UpdateResponse(response_header=response_header, response_body=update_response_body)
+        return UpdateResponse(
+            response_header=response_header, response_body=update_response_body
+        )
 
     @staticmethod
     def construct_unlink_error_response(
@@ -315,6 +325,10 @@ class ResponseHelper(BaseService):
             correlation_id=None,
             unlink_response=[],
         )
-        unlink_response_body = UnlinkResponseBody(response_payload=unlink_response_payload)
+        unlink_response_body = UnlinkResponseBody(
+            response_payload=unlink_response_payload
+        )
 
-        return UnlinkResponse(response_header=response_header, response_body=unlink_response_body)
+        return UnlinkResponse(
+            response_header=response_header, response_body=unlink_response_body
+        )
