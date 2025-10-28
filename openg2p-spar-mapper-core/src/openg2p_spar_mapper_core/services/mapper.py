@@ -263,7 +263,7 @@ class MapperService(BaseService):
             id=single_resolve_request.id,
             reference_id=single_resolve_request.reference_id,
             timestamp=datetime.now(),
-            fa=single_resolve_request.fa,
+            fa=None,
             status=StatusEnum.succ,
             status_reason_code=None,
             status_reason_message=None,
@@ -277,7 +277,7 @@ class MapperService(BaseService):
         return SingleResolveResponse(
             reference_id=single_resolve_request.reference_id,
             timestamp=datetime.now(),
-            fa=single_resolve_request.fa,
+            fa=None,
             status=error.status,
             status_reason_code=error.validation_error_type,
             status_reason_message=error.message,

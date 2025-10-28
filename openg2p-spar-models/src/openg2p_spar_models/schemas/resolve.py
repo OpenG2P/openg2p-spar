@@ -70,7 +70,7 @@ class SingleResolveResponse(BaseModel):
 
     reference_id: str
     timestamp: datetime
-    fa: Optional[str] = None
+    fa: Optional[dict] = None
     id: Optional[str] = None
     account_provider_info: Optional[AccountProviderInfo] = None
     status: StatusEnum

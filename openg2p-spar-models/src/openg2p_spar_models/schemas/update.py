@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from openg2p_fastapi_common.schemas import (
     G2PRequest,
@@ -11,6 +11,7 @@ from openg2p_fastapi_common.schemas import (
 from pydantic import BaseModel, ConfigDict
 
 from .link import StatusEnum
+from .strategy import FaUnion
 
 
 class UpdateStatusReasonCode(Enum):
@@ -26,10 +27,10 @@ class SingleUpdateRequest(BaseModel):
     reference_id: str
     timestamp: str
     id: Optional[str] = None
-    fa: str
+    fa: FaUnion
     name: Optional[str] = None
     phone_number: Optional[str] = None
-    additional_info: Optional[List[object]] = None
+    additional_info: Optional[List[Dict[str, Any]]] = None
     locale: Optional[str] = "en"
 
 

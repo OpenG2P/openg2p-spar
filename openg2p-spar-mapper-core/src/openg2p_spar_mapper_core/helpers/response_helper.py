@@ -1,8 +1,6 @@
 from datetime import datetime
 
 from openg2p_fastapi_common.schemas import (
-    G2PResponse,
-    G2PResponseBody,
     G2PResponseHeader,
     G2PResponseStatus,
 )
@@ -99,6 +97,8 @@ class ResponseHelper(BaseService):
         deconstructed_responses = []
         for response in single_resolve_responses:
             deconstructed_fa = None
+            print("additional_info, fa")
+            print(response.additional_info, response.fa)
             if response.fa and response.additional_info:
                 deconstructed_fa = (
                     await StrategyHelper()
@@ -172,19 +172,15 @@ class ResponseHelper(BaseService):
         )
 
     @staticmethod
-    def construct_error_response(
-        request, exception: Exception, error_code: str = None, error_message: str = None
-    ) -> G2PResponse:
+    def construct_link_error_response(
+        link_request: LinkRequest,
+        exception: Exception,
+        error_code: str = None,
+        error_message: str = None,
+    ) -> LinkResponse:
         """
-        Construct a G2PResponse error response following the G2PResponse schema
+        Construct a LinkResponse error response
         """
-        # Extract request_id from request header if available
-        request_id = (
-            getattr(request.request_header, "request_id", "unknown")
-            if hasattr(request, "request_header")
-            else "unknown"
-        )
-
         # Use provided error details or extract from exception
         final_error_code = error_code or getattr(
             exception, "validation_error_type", "rjct.internal.error"
@@ -195,15 +191,130 @@ class ResponseHelper(BaseService):
 
         # Create response header with error status
         response_header = G2PResponseHeader(
-            request_id=request_id,
+            request_id=link_request.request_header.request_id,
             response_status=G2PResponseStatus.ERROR,
             response_error_code=final_error_code,
             response_error_message=final_error_message,
             response_timestamp=datetime.now(),
         )
 
-        # Create response body with null payload
-        response_body = G2PResponseBody(response_payload=None)
+        # Create response body with empty list
+        link_response_payload = LinkResponsePayload(
+            transaction_id=link_request.request_body.request_payload.transaction_id,
+            correlation_id=None,
+            link_response=[],
+        )
+        link_response_body = LinkResponseBody(response_payload=link_response_payload)
 
-        # Return G2PResponse
-        return G2PResponse(response_header=response_header, response_body=response_body)
+        return LinkResponse(response_header=response_header, response_body=link_response_body)
+
+    @staticmethod
+    def construct_resolve_error_response(
+        resolve_request: ResolveRequest,
+        exception: Exception,
+        error_code: str = None,
+        error_message: str = None,
+    ) -> ResolveResponse:
+        """
+        Construct a ResolveResponse error response
+        """
+        # Use provided error details or extract from exception
+        final_error_code = error_code or getattr(
+            exception, "validation_error_type", "rjct.internal.error"
+        )
+        final_error_message = error_message or getattr(
+            exception, "message", str(exception)
+        )
+
+        # Create response header with error status
+        response_header = G2PResponseHeader(
+            request_id=resolve_request.request_header.request_id,
+            response_status=G2PResponseStatus.ERROR,
+            response_error_code=final_error_code,
+            response_error_message=final_error_message,
+            response_timestamp=datetime.now(),
+        )
+
+        # Create response body with empty list
+        resolve_response_payload = ResolveResponsePayload(
+            transaction_id=resolve_request.request_body.request_payload.transaction_id,
+            correlation_id=None,
+            resolve_response=[],
+        )
+        resolve_response_body = ResolveResponseBody(response_payload=resolve_response_payload)
+
+        return ResolveResponse(response_header=response_header, response_body=resolve_response_body)
+
+    @staticmethod
+    def construct_update_error_response(
+        update_request: UpdateRequest,
+        exception: Exception,
+        error_code: str = None,
+        error_message: str = None,
+    ) -> UpdateResponse:
+        """
+        Construct an UpdateResponse error response
+        """
+        # Use provided error details or extract from exception
+        final_error_code = error_code or getattr(
+            exception, "validation_error_type", "rjct.internal.error"
+        )
+        final_error_message = error_message or getattr(
+            exception, "message", str(exception)
+        )
+
+        # Create response header with error status
+        response_header = G2PResponseHeader(
+            request_id=update_request.request_header.request_id,
+            response_status=G2PResponseStatus.ERROR,
+            response_error_code=final_error_code,
+            response_error_message=final_error_message,
+            response_timestamp=datetime.now(),
+        )
+
+        # Create response body with empty list
+        update_response_payload = UpdateResponsePayload(
+            transaction_id=update_request.request_body.request_payload.transaction_id,
+            correlation_id=None,
+            update_response=[],
+        )
+        update_response_body = UpdateResponseBody(response_payload=update_response_payload)
+
+        return UpdateResponse(response_header=response_header, response_body=update_response_body)
+
+    @staticmethod
+    def construct_unlink_error_response(
+        unlink_request: UnlinkRequest,
+        exception: Exception,
+        error_code: str = None,
+        error_message: str = None,
+    ) -> UnlinkResponse:
+        """
+        Construct an UnlinkResponse error response
+        """
+        # Use provided error details or extract from exception
+        final_error_code = error_code or getattr(
+            exception, "validation_error_type", "rjct.internal.error"
+        )
+        final_error_message = error_message or getattr(
+            exception, "message", str(exception)
+        )
+
+        # Create response header with error status
+        response_header = G2PResponseHeader(
+            request_id=unlink_request.request_header.request_id,
+            response_status=G2PResponseStatus.ERROR,
+            response_error_code=final_error_code,
+            response_error_message=final_error_message,
+            response_timestamp=datetime.now(),
+        )
+
+        # Create response body with empty list
+        unlink_response_payload = UnlinkResponsePayload(
+            transaction_id=unlink_request.request_body.request_payload.transaction_id,
+            correlation_id=None,
+            unlink_response=[],
+        )
+        unlink_response_body = UnlinkResponseBody(response_payload=unlink_response_payload)
+
+        return UnlinkResponse(response_header=response_header, response_body=unlink_response_body)

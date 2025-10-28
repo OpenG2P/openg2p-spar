@@ -36,8 +36,13 @@ from .resolve import (
 )
 from .strategy import (
     STRATEGY_ID_KEY,
+    BankAccountFa,
+    EmailWalletFa,
     Fa,
+    FaUnion,
     KeyValuePair,
+    MobileWalletFa,
+    ProviderTypeEnum as StrategyProviderTypeEnum,
     StrategyCreateSchema,
     StrategySchema,
     StrategyTypeEnum,

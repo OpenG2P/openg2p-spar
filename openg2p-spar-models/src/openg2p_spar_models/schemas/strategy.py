@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel, ConfigDict
 
@@ -12,6 +12,14 @@ class StrategyTypeEnum(str, Enum):
 
     ID = "ID"
     FA = "FA"
+
+
+class ProviderTypeEnum(str, Enum):
+    """Enum for FA provider types"""
+
+    BANK = "BANK"
+    EMAIL_WALLET = "EMAIL_WALLET"
+    MOBILE_WALLET = "MOBILE_WALLET"
 
 
 class StrategySchema(BaseModel):
@@ -62,7 +70,7 @@ class KeyValuePair(BaseModel):
 
 class Fa(BaseModel):
     """
-    Schema for Financial Account (FA) data.
+    Base schema for Financial Account (FA) data.
 
     Contains the FA value and associated strategy_id for construction/deconstruction.
     """
@@ -70,7 +78,50 @@ class Fa(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     strategy_id: int
+    fa_type: ProviderTypeEnum
 
     def dict(self, **kwargs):
         """Return dictionary representation of the model"""
         return super().model_dump(**kwargs)
+
+
+class BankAccountFa(Fa):
+    """
+    Schema for Bank Account FA.
+
+    Used for bank account financial addresses.
+    """
+
+    bank_name: str
+    bank_code: str
+    branch_name: str
+    branch_code: str
+    account_number: str
+
+
+class MobileWalletFa(Fa):
+    """
+    Schema for Mobile Wallet FA.
+
+    Used for mobile wallet financial addresses.
+    """
+
+    wallet_provider_name: str
+    wallet_provider_code: str
+    mobile_number: str
+
+
+class EmailWalletFa(Fa):
+    """
+    Schema for Email Wallet FA.
+
+    Used for email wallet financial addresses.
+    """
+
+    wallet_provider_name: str
+    wallet_provider_code: str
+    email_address: str
+
+
+# Union type for all FA types
+FaUnion = Union[BankAccountFa, MobileWalletFa, EmailWalletFa]

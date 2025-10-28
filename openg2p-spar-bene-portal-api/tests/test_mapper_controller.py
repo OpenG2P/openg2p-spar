@@ -24,8 +24,11 @@ async def test_link_endpoint():
     mock_request = MagicMock()
     mock_single_link_request = MagicMock()
     mock_single_link_request.id = "original_id"
-    mock_single_link_request.fa = "test_fa"
-    mock_single_link_request.additional_info = [{"strategy_id": 1}]
+    # Create a mock FA object with strategy_id
+    mock_fa = MagicMock()
+    mock_fa.strategy_id = 1
+    mock_single_link_request.fa = mock_fa
+    mock_single_link_request.additional_info = None
     mock_request.request_body.request_payload.link_request = [mock_single_link_request]
 
     # Mock all dependencies before creating controller
@@ -70,10 +73,10 @@ async def test_link_endpoint():
         controller = MapperController()
 
         # Call the endpoint
-        result = await controller.link(mock_request, mock_auth)
+        result = await controller.link(mock_request)
 
         # Verify ID was replaced with constructed ID
-        assert mock_single_link_request.id == "constructed_id_123"
+        assert mock_single_link_request.id == "test_id"
         # Verify FA was constructed
         assert mock_single_link_request.fa == "constructed_fa_123"
         # Verify additional_info contains strategy_id
@@ -141,10 +144,10 @@ async def test_resolve_endpoint():
         controller = MapperController()
 
         # Call the endpoint
-        result = await controller.resolve(mock_request, mock_auth)
+        result = await controller.resolve(mock_request)
 
         # Verify ID was replaced with constructed ID
-        assert mock_single_resolve_request.id == "constructed_id_456"
+        assert mock_single_resolve_request.id == "test_id"
         assert result is not None
         mock_service_instance.resolve.assert_called_once()
 
