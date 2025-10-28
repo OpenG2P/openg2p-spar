@@ -117,6 +117,7 @@ class ResponseHelper(BaseService):
                 status_reason_code=response.status_reason_code,
                 status_reason_message=response.status_reason_message,
                 additional_info=response.additional_info,
+                locale=response.locale,
             )
             deconstructed_responses.append(deconstructed_response)
 
