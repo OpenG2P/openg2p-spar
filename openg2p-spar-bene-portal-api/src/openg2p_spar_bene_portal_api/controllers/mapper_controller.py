@@ -141,7 +141,7 @@ class MapperController(BaseController):
 
             # Construct response
             resolve_response: ResolveResponse = (
-                ResponseHelper.get_component().construct_resolve_response(
+                await ResponseHelper.get_component().construct_resolve_response(
                     resolve_request, single_resolve_responses
                 )
             )

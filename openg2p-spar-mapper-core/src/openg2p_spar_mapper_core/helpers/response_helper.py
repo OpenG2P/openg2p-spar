@@ -30,6 +30,8 @@ from openg2p_spar_models.schemas import (
     UpdateResponsePayload,
 )
 
+from .strategy_helper import StrategyHelper
+
 
 class ResponseHelper(BaseService):
     @staticmethod
@@ -87,15 +89,41 @@ class ResponseHelper(BaseService):
         )
 
     @staticmethod
-    def construct_resolve_response(
+    async def construct_resolve_response(
         resolve_request: ResolveRequest,
         single_resolve_responses: list[SingleResolveResponse],
     ) -> ResolveResponse:
         resolve_request_payload = resolve_request.request_body.request_payload
+
+        # Deconstruct FA for each response
+        deconstructed_responses = []
+        for response in single_resolve_responses:
+            deconstructed_fa = None
+            if response.fa and response.additional_info:
+                deconstructed_fa = (
+                    await StrategyHelper()
+                    .get_component()
+                    .deconstruct_fa(response.fa, response.additional_info)
+                )
+
+            # Create a new response with deconstructed FA
+            deconstructed_response = SingleResolveResponse(
+                reference_id=response.reference_id,
+                timestamp=response.timestamp,
+                fa=deconstructed_fa,
+                id=response.id,
+                account_provider_info=response.account_provider_info,
+                status=response.status,
+                status_reason_code=response.status_reason_code,
+                status_reason_message=response.status_reason_message,
+                additional_info=response.additional_info,
+            )
+            deconstructed_responses.append(deconstructed_response)
+
         resolve_response_payload = ResolveResponsePayload(
             transaction_id=resolve_request_payload.transaction_id,
             correlation_id=None,
-            resolve_response=single_resolve_responses,
+            resolve_response=deconstructed_responses,
         )
         resolve_response_body = ResolveResponseBody(
             response_payload=resolve_response_payload
