@@ -6,7 +6,7 @@ Tests API endpoints for Link, Resolve, Update, and Unlink operations
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from openg2p_fastapi_auth.models.credentials import AuthCredentials
+from openg2p_fastapi_auth_models.schemas import AuthCredentials
 from openg2p_spar_bene_portal_api.controllers import MapperController
 from openg2p_spar_models.schemas import StatusEnum
 

@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import Depends
 from openg2p_fastapi_auth.auth import AuthFactory
-from openg2p_fastapi_auth.dependencies import AuthCredentials
+from openg2p_fastapi_auth_models.schemas import AuthCredentials
 from openg2p_fastapi_common.controller import BaseController
 from openg2p_spar_mapper_core.exceptions import (
     LinkValidationException,
@@ -12,11 +12,10 @@ from openg2p_spar_mapper_core.exceptions import (
     UnlinkValidationException,
     UpdateValidationException,
 )
-from openg2p_spar_mapper_core.helpers.strategy_helper import StrategyHelper
+from openg2p_spar_mapper_core.helpers import StrategyHelper, ResponseHelper
 from openg2p_spar_mapper_core.services import (
     MapperService,
-    RequestValidation,
-    ResponseHelper,
+    RequestValidation
 )
 from openg2p_spar_models.schemas import (
     LinkRequest,
