@@ -6,6 +6,9 @@ on:
 jobs:
   publish-to-pypi:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: openg2p-spar-mapper-api
     steps:
     - name: Set up Python
       uses: actions/setup-python@v4
