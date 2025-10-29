@@ -44,9 +44,7 @@ class Branch(BaseORMModelWithTimes):
     )
     branch_name: Mapped[str] = mapped_column(String(255), nullable=False)
     branch_code: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
-    bank_id: Mapped[int] = mapped_column(
-        Integer(), nullable=False, index=True
-    )
+    bank_id: Mapped[int] = mapped_column(Integer(), nullable=False, index=True)
 
     @classmethod
     async def get_by_bank_id(cls, bank_id: int):
@@ -60,12 +58,16 @@ class Branch(BaseORMModelWithTimes):
             List of Branch objects for the specified bank
         """
         from openg2p_fastapi_common.context import dbengine
-        from sqlalchemy.ext.asyncio import AsyncSession
         from sqlalchemy import select
+        from sqlalchemy.ext.asyncio import AsyncSession
 
         session = AsyncSession(dbengine.get())
         try:
-            stmt = select(cls).where(cls.bank_id == bank_id).order_by(cls.branch_name.asc())
+            stmt = (
+                select(cls)
+                .where(cls.bank_id == bank_id)
+                .order_by(cls.branch_name.asc())
+            )
             result = await session.execute(stmt)
             return list(result.scalars())
         finally:
@@ -94,4 +96,3 @@ class WalletServiceProvider(BaseORMModelWithTimes):
     sp_name: Mapped[str] = mapped_column(String(255), nullable=False)
     sp_code: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
     wallet_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
-

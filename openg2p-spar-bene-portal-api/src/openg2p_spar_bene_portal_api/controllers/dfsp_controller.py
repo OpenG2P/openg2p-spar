@@ -54,9 +54,7 @@ class DfspController(BaseController):
             description="Returns all available wallet service providers",
         )
 
-    async def fetch_banks(
-        self, banks_request: BanksRequest
-    ) -> BanksResponse:
+    async def fetch_banks(self, banks_request: BanksRequest) -> BanksResponse:
         """
         Fetch all banks.
 
@@ -95,4 +93,3 @@ class DfspController(BaseController):
             WalletServiceProvidersResponse with list of wallet service providers
         """
         return await self.service.fetch_wallet_service_providers(wsp_request)
-

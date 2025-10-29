@@ -1,6 +1,5 @@
 import logging
 from datetime import datetime
-from typing import List, Optional
 
 from openg2p_fastapi_common.schemas import G2PResponseHeader, G2PResponseStatus
 from openg2p_fastapi_common.service import BaseService
@@ -11,11 +10,11 @@ from openg2p_spar_models.schemas import (
     BanksResponse,
     BanksResponseBody,
     BanksResponsePayload,
-    BranchSchema,
     BranchesRequest,
     BranchesResponse,
     BranchesResponseBody,
     BranchesResponsePayload,
+    BranchSchema,
     WalletServiceProviderSchema,
     WalletServiceProvidersRequest,
     WalletServiceProvidersResponse,
@@ -33,9 +32,7 @@ class DfspService(BaseService):
     Handles retrieval of banks, branches, and wallet service providers.
     """
 
-    async def fetch_banks(
-        self, banks_request: BanksRequest
-    ) -> BanksResponse:
+    async def fetch_banks(self, banks_request: BanksRequest) -> BanksResponse:
         """
         Fetch all banks.
 
@@ -158,4 +155,3 @@ class DfspService(BaseService):
         except Exception as e:
             _logger.error(f"Error fetching wallet service providers: {str(e)}")
             raise
-

@@ -156,4 +156,3 @@ class WalletServiceProvidersResponse(G2PResponse):
     """Response for wallet service providers"""
 
     response_body: WalletServiceProvidersResponseBody
-
