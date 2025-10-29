@@ -1,89 +1,159 @@
-from enum import Enum
-from typing import Optional
+from typing import List, Optional
 
+from openg2p_fastapi_common.schemas import (
+    G2PRequest,
+    G2PRequestBody,
+    G2PResponse,
+    G2PResponseBody,
+)
 from pydantic import BaseModel, ConfigDict
 
 
-class ProviderTypeEnum(str, Enum):
-    """Enum for DFSP provider types"""
-
-    BANK = "BANK"
-    EMAIL_WALLET = "EMAIL_WALLET"
-    MOBILE_WALLET = "MOBILE_WALLET"
-
-
-class DfspProviderSchema(BaseModel):
-    """
-    Pydantic schema for DfspProvider model.
-
-    Represents a top-level provider type.
-    """
+# Bank Schemas
+class BankSchema(BaseModel):
+    """Pydantic schema for Bank model"""
 
     model_config = ConfigDict(from_attributes=True)
 
     id: Optional[int] = None
-    code: str
-    name: str
-    provider_type: ProviderTypeEnum
-    description: Optional[str] = None
-    validation_regex: Optional[str] = None
+    bank_mnemonic: str
+    bank_name: str
+    bank_code: str
 
 
-class DfspProviderCreateSchema(BaseModel):
-    """Schema for creating a new DfspProvider"""
-
-    code: str
-    name: str
-    provider_type: ProviderTypeEnum
-    description: Optional[str] = None
-    validation_regex: Optional[str] = None
-
-
-class DfspProviderUpdateSchema(BaseModel):
-    """Schema for updating a DfspProvider"""
-
-    code: Optional[str] = None
-    name: Optional[str] = None
-    provider_type: Optional[ProviderTypeEnum] = None
-    description: Optional[str] = None
-    validation_regex: Optional[str] = None
-
-
-class DfspProviderValueSchema(BaseModel):
-    """
-    Pydantic schema for DfspProviderValue model.
-
-    Represents a specific provider instance (e.g., a bank, branch, or wallet).
-    """
+# Branch Schemas
+class BranchSchema(BaseModel):
+    """Pydantic schema for Branch model"""
 
     model_config = ConfigDict(from_attributes=True)
 
     id: Optional[int] = None
-    code: str
-    name: str
-    provider_type: ProviderTypeEnum
-    parent_id: Optional[int] = None
-    description: Optional[str] = None
-    validation_regex: Optional[str] = None
+    branch_mnemonic: str
+    branch_name: str
+    branch_code: str
+    bank_id: int
 
 
-class DfspProviderValueCreateSchema(BaseModel):
-    """Schema for creating a new DfspProviderValue"""
+# WalletServiceProvider Schemas
+class WalletServiceProviderSchema(BaseModel):
+    """Pydantic schema for WalletServiceProvider model"""
 
-    code: str
-    name: str
-    provider_type: ProviderTypeEnum
-    parent_id: Optional[int] = None
-    description: Optional[str] = None
-    validation_regex: Optional[str] = None
+    model_config = ConfigDict(from_attributes=True)
+
+    id: Optional[int] = None
+    sp_mnemonic: str
+    sp_name: str
+    sp_code: str
+    wallet_type: str
 
 
-class DfspProviderValueUpdateSchema(BaseModel):
-    """Schema for updating a DfspProviderValue"""
+# DFSP Request/Response Schemas
+class BanksRequestPayload(BaseModel):
+    """Payload for banks request"""
 
-    code: Optional[str] = None
-    name: Optional[str] = None
-    provider_type: Optional[ProviderTypeEnum] = None
-    parent_id: Optional[int] = None
-    description: Optional[str] = None
-    validation_regex: Optional[str] = None
+    pass
+
+
+class BanksRequestBody(G2PRequestBody):
+    """Request body for banks"""
+
+    request_payload: BanksRequestPayload
+
+
+class BanksRequest(G2PRequest):
+    """Request for banks"""
+
+    request_body: BanksRequestBody
+
+
+class BanksResponsePayload(BaseModel):
+    """Response payload for banks"""
+
+    banks: List[BankSchema]
+
+
+class BanksResponseBody(G2PResponseBody):
+    """Response body for banks"""
+
+    response_payload: BanksResponsePayload
+
+
+class BanksResponse(G2PResponse):
+    """Response for banks"""
+
+    response_body: BanksResponseBody
+
+
+# Branches Request/Response
+class BranchesRequestPayload(BaseModel):
+    """Payload for branches request"""
+
+    bank_id: Optional[int] = None
+
+
+class BranchesRequestBody(G2PRequestBody):
+    """Request body for branches"""
+
+    request_payload: BranchesRequestPayload
+
+
+class BranchesRequest(G2PRequest):
+    """Request for branches"""
+
+    request_body: BranchesRequestBody
+
+
+class BranchesResponsePayload(BaseModel):
+    """Response payload for branches"""
+
+    branches: List[BranchSchema]
+
+
+class BranchesResponseBody(G2PResponseBody):
+    """Response body for branches"""
+
+    response_payload: BranchesResponsePayload
+
+
+class BranchesResponse(G2PResponse):
+    """Response for branches"""
+
+    response_body: BranchesResponseBody
+
+
+# Wallet Service Providers Request/Response
+class WalletServiceProvidersRequestPayload(BaseModel):
+    """Payload for wallet service providers request"""
+
+    pass
+
+
+class WalletServiceProvidersRequestBody(G2PRequestBody):
+    """Request body for wallet service providers"""
+
+    request_payload: WalletServiceProvidersRequestPayload
+
+
+class WalletServiceProvidersRequest(G2PRequest):
+    """Request for wallet service providers"""
+
+    request_body: WalletServiceProvidersRequestBody
+
+
+class WalletServiceProvidersResponsePayload(BaseModel):
+    """Response payload for wallet service providers"""
+
+    wallet_service_providers: List[WalletServiceProviderSchema]
+
+
+class WalletServiceProvidersResponseBody(G2PResponseBody):
+    """Response body for wallet service providers"""
+
+    response_payload: WalletServiceProvidersResponsePayload
+
+
+class WalletServiceProvidersResponse(G2PResponse):
+    """Response for wallet service providers"""
+
+    response_body: WalletServiceProvidersResponseBody
+
