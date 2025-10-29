@@ -15,10 +15,11 @@ from openg2p_spar_mapper_core.services import (
     RequestValidation,
 )
 from openg2p_spar_models.models import (
-    DfspProvider,
-    DfspProviderValue,
+    Bank,
+    Branch,
     IdFaMapping,
     Strategy,
+    WalletServiceProvider,
 )
 
 from .controllers import DfspController, MapperController
@@ -45,9 +46,10 @@ class Initializer(BaseInitializer):
 
         async def migrate():
             _logger.info("Migrating database")
+            await Bank.create_migrate()
+            await Branch.create_migrate()
+            await WalletServiceProvider.create_migrate()
             await IdFaMapping.create_migrate()
             await Strategy.create_migrate()
-            await DfspProvider.create_migrate()
-            await DfspProviderValue.create_migrate()
 
         asyncio.run(migrate())

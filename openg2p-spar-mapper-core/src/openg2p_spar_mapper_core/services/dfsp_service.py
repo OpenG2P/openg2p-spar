@@ -1,124 +1,157 @@
-from typing import List, Optional
+import logging
+from datetime import datetime
 
+from openg2p_fastapi_common.schemas import G2PResponseHeader, G2PResponseStatus
 from openg2p_fastapi_common.service import BaseService
-from openg2p_spar_models.models import DfspProvider, DfspProviderValue
+from openg2p_spar_models.models import Bank, Branch, WalletServiceProvider
 from openg2p_spar_models.schemas import (
-    DfspProviderSchema,
-    DfspProviderValueSchema,
+    BankSchema,
+    BanksRequest,
+    BanksResponse,
+    BanksResponseBody,
+    BanksResponsePayload,
+    BranchesRequest,
+    BranchesResponse,
+    BranchesResponseBody,
+    BranchesResponsePayload,
+    BranchSchema,
+    WalletServiceProviderSchema,
+    WalletServiceProvidersRequest,
+    WalletServiceProvidersResponse,
+    WalletServiceProvidersResponseBody,
+    WalletServiceProvidersResponsePayload,
 )
+
+_logger = logging.getLogger("spar-mapper")
 
 
 class DfspService(BaseService):
     """
     Service for managing DFSP (Digital Financial Service Provider) data.
 
-    Handles queries for provider types and their values (e.g., banks, branches, wallets).
+    Handles retrieval of banks, branches, and wallet service providers.
     """
 
-    async def get_all_providers(self) -> List[DfspProviderSchema]:
+    async def fetch_banks(self, banks_request: BanksRequest) -> BanksResponse:
         """
-        Get all provider types.
-
-        Returns:
-            List of DfspProviderSchema objects
-        """
-        providers = await DfspProvider.get_all_providers()
-        return [DfspProviderSchema.model_validate(p.__dict__) for p in providers]
-
-    async def get_provider_by_type(
-        self, provider_type: str
-    ) -> Optional[DfspProviderSchema]:
-        """
-        Get a provider by type.
+        Fetch all banks.
 
         Args:
-            provider_type: The provider type (BANK, EMAIL_WALLET, MOBILE_WALLET)
+            banks_request: The banks request
 
         Returns:
-            DfspProviderSchema or None if not found
+            BanksResponse with list of banks
         """
-        provider = await DfspProvider.get_provider_by_type(provider_type)
-        if provider:
-            return DfspProviderSchema.model_validate(provider.__dict__)
-        return None
+        try:
+            _logger.debug("Fetching all banks")
+            banks = await Bank.get_all()
+            _logger.debug(f"Found {len(banks)} banks")
 
-    async def get_provider_by_code(self, code: str) -> Optional[DfspProviderSchema]:
+            bank_schemas = [BankSchema.model_validate(bank.__dict__) for bank in banks]
+
+            response_payload = BanksResponsePayload(banks=bank_schemas)
+            response_body = BanksResponseBody(response_payload=response_payload)
+
+            response_header = G2PResponseHeader(
+                request_id=banks_request.request_header.request_id,
+                response_status=G2PResponseStatus.SUCCESS,
+                response_error_code=None,
+                response_error_message=None,
+                response_timestamp=datetime.now(),
+            )
+
+            return BanksResponse(
+                response_header=response_header, response_body=response_body
+            )
+        except Exception as e:
+            _logger.error(f"Error fetching banks: {str(e)}")
+            raise
+
+    async def fetch_branches(
+        self, branches_request: BranchesRequest
+    ) -> BranchesResponse:
         """
-        Get a provider by code.
+        Fetch all branches, optionally filtered by bank_id.
 
         Args:
-            code: The provider code
+            branches_request: The branches request
 
         Returns:
-            DfspProviderSchema or None if not found
+            BranchesResponse with list of branches
         """
-        provider = await DfspProvider.get_provider_by_code(code)
-        if provider:
-            return DfspProviderSchema.model_validate(provider.__dict__)
-        return None
+        try:
+            bank_id = branches_request.request_body.request_payload.bank_id
+            _logger.debug(f"Fetching branches with bank_id filter: {bank_id}")
 
-    async def get_provider_values(
-        self,
-        provider_type: str,
-        parent_id: Optional[int] = None,
-    ) -> List[DfspProviderValueSchema]:
+            if bank_id:
+                branches = await Branch.get_by_bank_id(bank_id)
+            else:
+                branches = await Branch.get_all()
+
+            _logger.debug(f"Found {len(branches)} branches")
+
+            branch_schemas = [
+                BranchSchema.model_validate(branch.__dict__) for branch in branches
+            ]
+
+            response_payload = BranchesResponsePayload(branches=branch_schemas)
+            response_body = BranchesResponseBody(response_payload=response_payload)
+
+            response_header = G2PResponseHeader(
+                request_id=branches_request.request_header.request_id,
+                response_status=G2PResponseStatus.SUCCESS,
+                response_error_code=None,
+                response_error_message=None,
+                response_timestamp=datetime.now(),
+            )
+
+            return BranchesResponse(
+                response_header=response_header, response_body=response_body
+            )
+        except Exception as e:
+            _logger.error(f"Error fetching branches: {str(e)}")
+            raise
+
+    async def fetch_wallet_service_providers(
+        self, wsp_request: WalletServiceProvidersRequest
+    ) -> WalletServiceProvidersResponse:
         """
-        Get provider values filtered by type and optional parent.
+        Fetch all wallet service providers.
 
         Args:
-            provider_type: The provider type (BANK, EMAIL_WALLET, MOBILE_WALLET)
-            parent_id: Optional parent ID (for branches under a bank)
+            wsp_request: The wallet service providers request
 
         Returns:
-            List of DfspProviderValueSchema objects
+            WalletServiceProvidersResponse with list of wallet service providers
         """
-        values = await DfspProviderValue.get_values_by_type(
-            provider_type=provider_type, parent_id=parent_id
-        )
-        return [DfspProviderValueSchema.model_validate(v.__dict__) for v in values]
+        try:
+            _logger.debug("Fetching all wallet service providers")
+            providers = await WalletServiceProvider.get_all()
+            _logger.debug(f"Found {len(providers)} wallet service providers")
 
-    async def get_provider_value_by_code(
-        self, code: str
-    ) -> Optional[DfspProviderValueSchema]:
-        """
-        Get a provider value by code.
+            provider_schemas = [
+                WalletServiceProviderSchema.model_validate(provider.__dict__)
+                for provider in providers
+            ]
 
-        Args:
-            code: The provider value code
+            response_payload = WalletServiceProvidersResponsePayload(
+                wallet_service_providers=provider_schemas
+            )
+            response_body = WalletServiceProvidersResponseBody(
+                response_payload=response_payload
+            )
 
-        Returns:
-            DfspProviderValueSchema or None if not found
-        """
-        value = await DfspProviderValue.get_value_by_code(code)
-        if value:
-            return DfspProviderValueSchema.model_validate(value.__dict__)
-        return None
+            response_header = G2PResponseHeader(
+                request_id=wsp_request.request_header.request_id,
+                response_status=G2PResponseStatus.SUCCESS,
+                response_error_code=None,
+                response_error_message=None,
+                response_timestamp=datetime.now(),
+            )
 
-    async def get_children(self, parent_id: int) -> List[DfspProviderValueSchema]:
-        """
-        Get direct children of a provider value (e.g., branches of a bank).
-
-        Args:
-            parent_id: Parent provider value ID
-
-        Returns:
-            List of child DfspProviderValueSchema objects
-        """
-        children = await DfspProviderValue.get_children(parent_id)
-        return [DfspProviderValueSchema.model_validate(c.__dict__) for c in children]
-
-    async def get_root_providers(
-        self, provider_type: str
-    ) -> List[DfspProviderValueSchema]:
-        """
-        Get root-level provider values (those without a parent).
-
-        Args:
-            provider_type: The provider type (BANK, EMAIL_WALLET, MOBILE_WALLET)
-
-        Returns:
-            List of root DfspProviderValueSchema objects
-        """
-        return await self.get_provider_values(
-            provider_type=provider_type, parent_id=None
-        )
+            return WalletServiceProvidersResponse(
+                response_header=response_header, response_body=response_body
+            )
+        except Exception as e:
+            _logger.error(f"Error fetching wallet service providers: {str(e)}")
+            raise
