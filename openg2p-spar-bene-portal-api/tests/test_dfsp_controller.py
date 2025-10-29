@@ -35,7 +35,9 @@ async def test_fetch_banks(mock_dfsp_service):
 
     # Mock response
     mock_banks = [
-        BankSchema(id=1, bank_mnemonic="ICIC", bank_name="ICICI Bank", bank_code="ICIC"),
+        BankSchema(
+            id=1, bank_mnemonic="ICIC", bank_name="ICICI Bank", bank_code="ICIC"
+        ),
         BankSchema(id=2, bank_mnemonic="HDFC", bank_name="HDFC Bank", bank_code="HDFC"),
     ]
     mock_response = MagicMock()
@@ -138,7 +140,9 @@ async def test_fetch_wallet_service_providers(mock_dfsp_service):
         ),
     ]
     mock_response = MagicMock()
-    mock_response.response_body.response_payload.wallet_service_providers = mock_providers
+    mock_response.response_body.response_payload.wallet_service_providers = (
+        mock_providers
+    )
     mock_response.response_header.response_status = G2PResponseStatus.SUCCESS
     mock_service_instance.fetch_wallet_service_providers.return_value = mock_response
 
