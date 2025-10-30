@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ${{ env.SERVICE_DIR }}/Dockerfile
+          file: Dockerfile.bene-portal
           push: false
           tags: ${{ env.IMAGE_ID }}:${{ env.VERSION }}
           cache-from: type=gha
@@ -60,8 +60,8 @@ jobs:
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: ${{ env.SERVICE_DIR }}
-          file: ${{ env.SERVICE_DIR }}/Dockerfile
+          context: .
+          file: Dockerfile.bene-portal
           push: true
           tags: ${{ env.IMAGE_ID }}:${{ env.VERSION }}
           cache-from: type=gha
@@ -97,7 +97,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ${{ env.SERVICE_DIR }}/Dockerfile
+          file: Dockerfile.mapper
           push: false
           tags: ${{ env.IMAGE_ID }}:${{ env.VERSION }}
           cache-from: type=gha
@@ -114,8 +114,8 @@ jobs:
         if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
-          context: ${{ env.SERVICE_DIR }}
-          file: ${{ env.SERVICE_DIR }}/Dockerfile
+          context: .
+          file: Dockerfile.mapper
           push: true
           tags: ${{ env.IMAGE_ID }}:${{ env.VERSION }}
           cache-from: type=gha
