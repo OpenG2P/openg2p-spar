@@ -13,8 +13,8 @@ from openg2p_spar_mapper_core.services import (
     IdFaMappingValidations,
     MapperService,
     RequestValidation,
-    ResponseHelper,
 )
+from openg2p_spar_mapper_core.helpers import ResponseHelper, StrategyHelper
 from openg2p_spar_models.models import (
     IdFaMapping,
 )
@@ -30,6 +30,7 @@ class Initializer(BaseInitializer):
 
         IdFaMappingValidations()
         RequestValidation()
+        StrategyHelper()
         MapperService()
         ResponseHelper()
         JWTValidationHelper()
