@@ -15,6 +15,7 @@ from openg2p_spar_mapper_core.exceptions import (
 from openg2p_spar_mapper_core.helpers import ResponseHelper, StrategyHelper
 from openg2p_spar_mapper_core.services import MapperService, RequestValidation
 from openg2p_spar_models.schemas import (
+    STRATEGY_ID_KEY,
     LinkRequest,
     LinkResponse,
     ResolveRequest,
@@ -23,7 +24,6 @@ from openg2p_spar_models.schemas import (
     UnlinkResponse,
     UpdateRequest,
     UpdateResponse,
-    STRATEGY_ID_KEY
 )
 
 from ..config import Settings
@@ -95,7 +95,9 @@ class MapperController(BaseController):
                     strategy_id = single_link_request.fa.strategy_id
 
                     # Construct FA using StrategyHelper (converts FA object to string)
-                    _logger.info(f"Constructing FA string from FA object... {single_link_request.fa}")
+                    _logger.info(
+                        f"Constructing FA string from FA object... {single_link_request.fa}"
+                    )
                     constructed_fa_string = (
                         await StrategyHelper()
                         .get_component()
@@ -134,7 +136,9 @@ class MapperController(BaseController):
                 link_request, e, "rjct.request.validation", str(e)
             )
         except LinkValidationException as e:
-            _logger.info(f"Link validation error: {e.validation_error_type} - {e.message}")
+            _logger.info(
+                f"Link validation error: {e.validation_error_type} - {e.message}"
+            )
             return ResponseHelper.get_component().construct_link_error_response(
                 link_request, e, e.validation_error_type, e.message
             )
