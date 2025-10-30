@@ -14,8 +14,9 @@ from openg2p_spar_mapper_core.exceptions import (
 from openg2p_spar_mapper_core.services import (
     MapperService,
     RequestValidation,
-    ResponseHelper,
 )
+from openg2p_spar_mapper_core.helpers import ResponseHelper, StrategyHelper
+
 from openg2p_spar_models.schemas import (
     LinkRequest,
     LinkResponse,
@@ -25,6 +26,7 @@ from openg2p_spar_models.schemas import (
     UnlinkResponse,
     UpdateRequest,
     UpdateResponse,
+    STRATEGY_ID_KEY
 )
 
 from ..config import Settings
@@ -79,7 +81,37 @@ class MapperController(BaseController):
 
             # Validate request structure
             RequestValidation.get_component().validate_request(link_request)
+            for (
+                single_link_request
+            ) in link_request.request_body.request_payload.link_request:
 
+                # Construct FA from the request FA object
+                if single_link_request.fa:
+                    # Store strategy_id before constructing FA
+                    strategy_id = single_link_request.fa.strategy_id
+
+                    # Construct FA using StrategyHelper (converts FA object to string)
+                    constructed_fa_string = (
+                        await StrategyHelper()
+                        .get_component()
+                        .construct_fa(single_link_request.fa)
+                    )
+                    # Replace FA object with constructed FA string for storage
+                    single_link_request.fa = constructed_fa_string
+
+                    # Ensure additional_info contains strategy_id
+                    if not single_link_request.additional_info:
+                        single_link_request.additional_info = []
+
+                    if (
+                        not single_link_request.additional_info
+                        or STRATEGY_ID_KEY not in single_link_request.additional_info[0]
+                    ):
+                        if not single_link_request.additional_info:
+                            single_link_request.additional_info = [{}]
+                        single_link_request.additional_info[0][
+                            STRATEGY_ID_KEY
+                        ] = strategy_id
             # Process link request
             single_link_responses = await self.service.link(link_request)
             _logger.debug(f"Single Link Responses: {single_link_responses}")
@@ -92,16 +124,16 @@ class MapperController(BaseController):
             return link_response
 
         except RequestValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_link_error_response(
                 link_request, e, "rjct.request.validation", str(e)
             )
         except LinkValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_link_error_response(
                 link_request, e, e.validation_error_type, e.message
             )
         except Exception as e:
             _logger.error(f"Internal server error during link operation: {str(e)}")
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_link_error_response(
                 link_request, e, "rjct.internal.error", "Internal server error"
             )
 
@@ -131,16 +163,16 @@ class MapperController(BaseController):
             return resolve_response
 
         except RequestValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_resolve_error_response(
                 resolve_request, e, "rjct.request.validation", str(e)
             )
         except ResolveValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_resolve_error_response(
                 resolve_request, e, e.validation_error_type, e.message
             )
         except Exception as e:
             _logger.error(f"Internal server error during resolve operation: {str(e)}")
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_resolve_error_response(
                 resolve_request, e, "rjct.internal.error", "Internal server error"
             )
 
@@ -170,16 +202,16 @@ class MapperController(BaseController):
             return unlink_response
 
         except RequestValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_unlink_error_response(
                 unlink_request, e, "rjct.request.validation", str(e)
             )
         except UnlinkValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_unlink_error_response(
                 unlink_request, e, e.validation_error_type, e.message
             )
         except Exception as e:
             _logger.error(f"Internal server error during unlink operation: {str(e)}")
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_unlink_error_response(
                 unlink_request, e, "rjct.internal.error", "Internal server error"
             )
 
@@ -209,15 +241,15 @@ class MapperController(BaseController):
             return update_response
 
         except RequestValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_update_error_response(
                 update_request, e, "rjct.request.validation", str(e)
             )
         except UpdateValidationException as e:
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_update_error_response(
                 update_request, e, e.validation_error_type, e.message
             )
         except Exception as e:
             _logger.error(f"Internal server error during update operation: {str(e)}")
-            return ResponseHelper.get_component().construct_error_response(
+            return ResponseHelper.get_component().construct_update_error_response(
                 update_request, e, "rjct.internal.error", "Internal server error"
             )
