@@ -97,15 +97,12 @@ class ResponseHelper(BaseService):
         deconstructed_responses = []
         for response in single_resolve_responses:
             deconstructed_fa = None
-            print("additional_info, fa")
-            print(response.additional_info, response.fa)
             if response.fa and response.additional_info:
                 deconstructed_fa = (
                     await StrategyHelper()
                     .get_component()
                     .deconstruct_fa(response.fa, response.additional_info)
                 )
-
             # Create a new response with deconstructed FA
             deconstructed_response = SingleResolveResponse(
                 reference_id=response.reference_id,
