@@ -20,8 +20,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives
 
-# Copy entire project to container (simpler and safer than multiple ADDs)
-ADD --chown=${container_user}:${container_user_group} . /app
+# Copy all local packages and application code
+ADD --chown=${container_user}:${container_user_group} openg2p-spar-models /app/openg2p-spar-models
+ADD --chown=${container_user}:${container_user_group} openg2p-spar-mapper-core /app/openg2p-spar-mapper-core
+ADD --chown=${container_user}:${container_user_group} openg2p-spar-bene-portal-api /app/openg2p-spar-bene-portal-api
 
 # Install Python dependencies
 RUN python -m pip install --upgrade pip setuptools wheel && \
@@ -31,7 +33,7 @@ RUN python -m pip install --upgrade pip setuptools wheel && \
       git+https://github.com/openg2p/openg2p-fastapi-common@1.1#subdirectory=openg2p-fastapi-common && \
     python -m pip install --no-cache-dir -e /app/openg2p-spar-models && \
     python -m pip install --no-cache-dir -e /app/openg2p-spar-mapper-core && \
-    python -m pip install --no-cache-dir -e /app
+    python -m pip install --no-cache-dir -e /app/openg2p-spar-bene-portal-api
 
 # Switch to non-root user
 USER ${container_user}
@@ -43,10 +45,8 @@ ENV SPAR_BENE_PORTAL_HOST=0.0.0.0
 ENV SPAR_BENE_PORTAL_PORT=8000
 ENV SPAR_BENE_PORTAL_NO_OF_WORKERS=4
 
+# Set working directory to the bene portal API
+WORKDIR /app/openg2p-spar-bene-portal-api
+
 # Run application
-CMD python3 main.py migrate; \
-    gunicorn "main:app" \
-      --workers ${SPAR_BENE_PORTAL_NO_OF_WORKERS} \
-      --worker-class uvicorn.workers.UvicornWorker \
-      --bind ${SPAR_BENE_PORTAL_HOST}:${SPAR_BENE_PORTAL_PORT} \
-      --access-logfile - --error-logfile -
+CMD ["sh", "-c", "gunicorn main:app --workers ${SPAR_BENE_PORTAL_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_BENE_PORTAL_HOST}:${SPAR_BENE_PORTAL_PORT} --access-logfile - --error-logfile -"]
