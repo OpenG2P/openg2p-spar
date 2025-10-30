@@ -81,6 +81,7 @@ class MapperController(BaseController):
 
             # Validate request structure
             RequestValidation.get_component().validate_request(link_request)
+
             for (
                 single_link_request
             ) in link_request.request_body.request_payload.link_request:
@@ -155,7 +156,7 @@ class MapperController(BaseController):
             single_resolve_responses = await self.service.resolve(resolve_request)
 
             # Construct response
-            resolve_response: ResolveResponse = (
+            resolve_response: ResolveResponse = ( await
                 ResponseHelper.get_component().construct_resolve_response(
                     resolve_request, single_resolve_responses
                 )
@@ -228,6 +229,38 @@ class MapperController(BaseController):
 
             # Validate request structure
             RequestValidation.get_component().validate_request(update_request)
+
+            for (
+                single_update_request
+            ) in update_request.request_body.request_payload.update_request:
+
+                # Construct FA from the request FA object
+                if single_update_request.fa:
+                    # Store strategy_id before constructing FA
+                    strategy_id = single_update_request.fa.strategy_id
+
+                    # Construct FA using StrategyHelper (converts FA object to string)
+                    constructed_fa_string = (
+                        await StrategyHelper()
+                        .get_component()
+                        .construct_fa(single_update_request.fa)
+                    )
+                    # Replace FA object with constructed FA string for storage
+                    single_update_request.fa = constructed_fa_string
+
+                    # Ensure additional_info contains strategy_id
+                    if not single_update_request.additional_info:
+                        single_update_request.additional_info = []
+
+                    if (
+                        not single_update_request.additional_info
+                        or STRATEGY_ID_KEY not in single_update_request.additional_info[0]
+                    ):
+                        if not single_update_request.additional_info:
+                            single_update_request.additional_info = [{}]
+                        single_update_request.additional_info[0][
+                            STRATEGY_ID_KEY
+                        ] = strategy_id
 
             # Process update request
             single_update_responses = await self.service.update(update_request)
