@@ -24,3 +24,5 @@ class Settings(BaseSettings):
     db_hostname: str = "localhost"
     db_port: int = 5432
     db_dbname: str = "spardb"
+
+    keymanager_sign_app_id: str = "SPAR"
