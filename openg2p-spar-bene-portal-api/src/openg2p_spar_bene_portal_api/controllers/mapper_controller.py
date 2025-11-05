@@ -68,7 +68,7 @@ class MapperController(BaseController):
     async def link(
         self,
         link_request: LinkRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory())],
     ) -> LinkResponse:
         """
         Link ID to Financial Address
@@ -151,7 +151,7 @@ class MapperController(BaseController):
     async def resolve(
         self,
         resolve_request: ResolveRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory())],
     ) -> ResolveResponse:
         """
         Resolve ID to Financial Address
@@ -200,7 +200,7 @@ class MapperController(BaseController):
     async def unlink(
         self,
         unlink_request: UnlinkRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory())],
     ) -> UnlinkResponse:
         """
         Unlink ID from Financial Address
@@ -248,7 +248,7 @@ class MapperController(BaseController):
     async def update(
         self,
         update_request: UpdateRequest,
-        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory)],
+        auth_credentials: Annotated[AuthCredentials, Depends(AuthFactory())],
     ) -> UpdateResponse:
         """
         Update ID to Financial Address mapping
