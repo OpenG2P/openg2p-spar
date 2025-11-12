@@ -78,9 +78,10 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(link_request)
 
             # Construct ID from auth credentials
-            constructed_id = (
-                await StrategyHelper().get_component().construct_id(auth_credentials)
-            )
+            # constructed_id = (
+            #     await StrategyHelper().get_component().construct_id(auth_credentials)
+            # )
+            constructed_id = auth_credentials.sub
 
             # Replace ID with constructed ID from auth for each request
             # Also construct FA and add additional_info for each request
@@ -160,9 +161,10 @@ class MapperController(BaseController):
             # Validate request structure
             RequestValidation.get_component().validate_request(resolve_request)
             # Construct ID from auth credentials
-            constructed_id = (
-                await StrategyHelper().get_component().construct_id(auth_credentials)
-            )
+            # constructed_id = (
+            #     await StrategyHelper().get_component().construct_id(auth_credentials)
+            # )
+            constructed_id = auth_credentials.sub
 
             # Replace ID with constructed ID from auth for each request
             for (
@@ -210,9 +212,10 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(unlink_request)
 
             # Construct ID from auth credentials
-            constructed_id = (
-                await StrategyHelper().get_component().construct_id(auth_credentials)
-            )
+            # constructed_id = (
+            #     await StrategyHelper().get_component().construct_id(auth_credentials)
+            # )
+            constructed_id = auth_credentials.sub
 
             # Replace ID with constructed ID from auth for each request
             for (
@@ -258,9 +261,10 @@ class MapperController(BaseController):
             RequestValidation.get_component().validate_request(update_request)
 
             # Construct ID from auth credentials
-            constructed_id = (
-                await StrategyHelper().get_component().construct_id(auth_credentials)
-            )
+            # constructed_id = (
+            #     await StrategyHelper().get_component().construct_id(auth_credentials)
+            # )
+            constructed_id = auth_credentials.sub
 
             # Replace ID with constructed ID from auth for each request
             # Also construct FA and add additional_info for each request
