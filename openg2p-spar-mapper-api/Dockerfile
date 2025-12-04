@@ -50,4 +50,4 @@ ENV SPAR_MAPPER_API_NO_OF_WORKERS=4
 WORKDIR /app/openg2p-spar-mapper-api
 
 # Run the application
-CMD ["sh", "-c", "gunicorn main:app --workers ${SPAR_MAPPER_API_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_MAPPER_API_HOST}:${SPAR_MAPPER_API_PORT} --access-logfile - --error-logfile -"]
+CMD ["sh", "-c", "python3 main.py migrate; gunicorn main:app --workers ${SPAR_MAPPER_API_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_MAPPER_API_HOST}:${SPAR_MAPPER_API_PORT} --access-logfile - --error-logfile -"]
