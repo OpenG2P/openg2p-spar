@@ -49,4 +49,4 @@ ENV G2P_SPAR_BENE_PORTAL_NO_OF_WORKERS=4
 WORKDIR /app/openg2p-spar-bene-portal-api
 
 # Run application
-CMD ["sh", "-c", "gunicorn main:app --workers ${SPAR_BENE_PORTAL_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_BENE_PORTAL_HOST}:${SPAR_BENE_PORTAL_PORT} --access-logfile - --error-logfile -"]
+CMD ["sh", "-c", "gunicorn main:app --workers ${G2P_SPAR_BENE_PORTAL_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${G2P_SPAR_BENE_PORTAL_HOST}:${G2P_SPAR_BENE_PORTAL_PORT} --access-logfile - --error-logfile -"]
