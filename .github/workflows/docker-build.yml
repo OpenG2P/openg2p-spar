@@ -67,12 +67,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  build-spar-mapper-api:
-    name: Build SPAR Mapper API Docker Image
+  build-spar-mapper-partner-api:
+    name: Build SPAR Mapper Partner API Docker Image
     runs-on: ubuntu-latest
     env:
-      SERVICE_NAME: openg2p-spar-mapper-api
-      SERVICE_DIR: openg2p-spar-mapper-api
+      SERVICE_NAME: openg2p-spar-mapper-partner-api
+      SERVICE_DIR: openg2p-spar-mapper-partner-api
     steps:
       - uses: actions/checkout@v4
         with:
