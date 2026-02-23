@@ -6,12 +6,12 @@ from . import __version__
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="spar_mapper_api_", env_file=".env", extra="allow"
+        env_prefix="spar_mapper_partner_api_", env_file=".env", extra="allow"
     )
 
-    openapi_title: str = "OpenG2P SPAR Mapper API"
+    openapi_title: str = "OpenG2P SPAR Mapper Partner API"
     openapi_description: str = """
-        FastAPI Service for OpenG2P SPAR Mapper API
+        FastAPI Service for OpenG2P SPAR Mapper Partner API
         ***********************************
         Further details goes here
         ***********************************
@@ -24,3 +24,5 @@ class Settings(BaseSettings):
     db_hostname: str = "localhost"
     db_port: int = 5432
     db_dbname: str = "spardb"
+
+    keymanager_sign_app_id: str = "SPAR"
