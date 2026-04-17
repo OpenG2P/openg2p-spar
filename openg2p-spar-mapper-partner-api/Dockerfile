@@ -51,3 +51,4 @@ WORKDIR /app/openg2p-spar-mapper-partner-api
 
 # Run the application
 CMD ["sh", "-c", "gunicorn main:app --workers ${SPAR_MAPPER_PARTNER_API_NO_OF_WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${SPAR_MAPPER_PARTNER_API_HOST}:${SPAR_MAPPER_PARTNER_API_PORT} --access-logfile - --error-logfile -"]
+
