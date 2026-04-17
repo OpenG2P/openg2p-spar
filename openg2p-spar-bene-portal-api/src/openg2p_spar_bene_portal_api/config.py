@@ -1,4 +1,4 @@
-from openg2p_fastapi_common.config import Settings as BaseSettings
+from openg2p_fastapi_auth.config import Settings as BaseSettings
 from pydantic_settings import SettingsConfigDict
 
 from . import __version__
@@ -6,7 +6,7 @@ from . import __version__
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="spar_bene_portal_api_", env_file=".env", extra="allow"
+        env_prefix="g2p_spar_bene_portal_api_", env_file=".env", extra="allow"
     )
 
     openapi_title: str = "OpenG2P SPAR Bene Portal API"

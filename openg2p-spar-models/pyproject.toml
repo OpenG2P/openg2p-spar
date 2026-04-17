@@ -26,8 +26,8 @@ dynamic = ["version"]
 [project.urls]
 Homepage = "https://openg2p.org"
 Documentation = "https://docs.openg2p.org/"
-Repository = "https://github.com/OpenG2P/openg2p-spar-mapper-api"
-Source = "https://github.com/OpenG2P/openg2p-spar-mapper-api"
+Repository = "https://github.com/OpenG2P/openg2p-spar"
+Source = "https://github.com/OpenG2P/openg2p-spar"
 
 [tool.hatch.version]
 path = "src/openg2p_spar_models/__init__.py"
