@@ -15,9 +15,7 @@ from openg2p_spar_mapper_core.services import (
     MapperService,
     RequestValidation,
 )
-from openg2p_spar_models.models import (
-    IdFaMapping, Strategy
-)
+from openg2p_spar_models.models import IdFaMapping, Strategy
 
 from .controllers import MapperController
 
