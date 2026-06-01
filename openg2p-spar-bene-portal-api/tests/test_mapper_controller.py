@@ -75,8 +75,8 @@ async def test_link_endpoint():
         # Call the endpoint
         result = await controller.link(mock_request, mock_auth)
 
-        # Verify ID was replaced with constructed ID
-        assert mock_single_link_request.id == "constructed_id_123"
+        # Verify ID was replaced with the subject from auth credentials
+        assert mock_single_link_request.id == "test_subject"
         # Verify FA was constructed
         assert mock_single_link_request.fa == "constructed_fa_123"
         # Verify additional_info contains strategy_id
@@ -134,10 +134,10 @@ async def test_resolve_endpoint():
             mock_strategy_helper_instance
         )
 
-        # Setup response helper mock
+        # Setup response helper mock (construct_resolve_response is awaited)
         mock_response = MagicMock()
-        mock_response_helper.get_component.return_value.construct_resolve_response.return_value = (
-            mock_response
+        mock_response_helper.get_component.return_value.construct_resolve_response = (
+            AsyncMock(return_value=mock_response)
         )
 
         # Create controller
@@ -146,8 +146,8 @@ async def test_resolve_endpoint():
         # Call the endpoint
         result = await controller.resolve(mock_request, mock_auth)
 
-        # Verify ID was replaced with constructed ID
-        assert mock_single_resolve_request.id == "constructed_id_456"
+        # Verify empty ID was replaced with the subject from auth credentials
+        assert mock_single_resolve_request.id == "test_subject"
         assert result is not None
         mock_service_instance.resolve.assert_called_once()
 
